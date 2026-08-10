@@ -1,0 +1,34 @@
+# =========================
+# BACKEND (Node.js)
+# =========================
+Backend/node_modules/
+Backend/.env
+Backend/npm-debug.log*
+Backend/yarn-debug.log*
+Backend/yarn-error.log*
+
+# =========================
+# FRONTEND (Flutter)
+# =========================
+# (Sebenarnya di dalam folder Frontend sudah ada .gitignore bawaan Flutter,
+#  tapi ini untuk berjaga-jaga jika Anda melakukan 'git init' dari luar)
+Frontend/.dart_tool/
+Frontend/.idea/
+Frontend/build/
+Frontend/.flutter-plugins
+Frontend/.flutter-plugins-dependencies
+Frontend/.pub-cache/
+Frontend/.pub/
+*.iml
+*.log
+
+# =========================
+# OS GENERATED FILES
+# =========================
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
