@@ -1,12 +1,17 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:flutter/foundation.dart';
 
 class ApiService {
-  // Gunakan 10.0.2.2 jika menggunakan Emulator Android
-  // Gunakan localhost atau 127.0.0.1 jika menggunakan Web/iOS/Desktop
-  // Gunakan IP WiFi laptop jika menggunakan perangkat HP fisik
-  static const String baseUrl = 'http://10.0.2.2:5000/api/auth';
+  // URL dinamis: localhost untuk Web, 10.0.2.2 untuk Android Emulator
+  static String get baseUrl {
+    if (kIsWeb) {
+      return 'http://localhost:5000/api/auth';
+    } else {
+      return 'http://10.0.2.2:5000/api/auth';
+    }
+  }
 
   static Future<Map<String, dynamic>> register(String fullName, String email, String password) async {
     try {
