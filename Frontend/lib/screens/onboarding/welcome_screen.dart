@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import '../../widgets/custom_button.dart';
 import 'auth_screen.dart';
 import 'role_screen.dart';
 
@@ -8,194 +7,274 @@ class WelcomeScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // Definisi warna sesuai dengan tema barumu
+    const Color brandColor = Color(0xFF2B5C43);
+    const Color brandSecondary = Color(0xFFD7E8D5);
+    const Color brandTertiary = Color(0xFFF3F6F2);
+    const Color surfaceColor = Color(0xFFF9F9F9);
+
     return Scaffold(
-      backgroundColor: const Color(0xFFF9F9F9),
-      body: SafeArea(
-        child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 16.0),
-          child: Column(
-            children: [
-              const SizedBox(height: 12),
-              Image.asset(
-                'assets/images/Connie_app.png',
-                width: 120,
-                height: 120,
-              ),
-              const SizedBox(height: 32),
-
-              const Text(
-                'Selamat Datang di\nEduConnect',
-                textAlign: TextAlign.center,
-                style: TextStyle(
-                  fontSize: 30,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.black87,
-                ),
-              ),
-              const SizedBox(height: 16),
-
-              const Text(
-                'Platform kolaborasi akademik untuk mahasiswa Indonesia. Temukan rekan belajar yang tepat.',
-                textAlign: TextAlign.center,
-                style: TextStyle(
-                  fontSize: 14,
-                  color: Colors.black54,
-                  height: 1.6,
-                ),
-              ),
-              const SizedBox(height: 28),
-
-              Container(
-                width: double.infinity,
-                padding: const EdgeInsets.all(18),
-                decoration: BoxDecoration(
-                  color: const Color(0xFFD7E8D5),
-                  borderRadius: BorderRadius.circular(20),
-                ),
-                child: const Text(
-                  'Platform ini digunakan untuk tujuan akademik. Dengan mendaftar, kamu menyetujui penggunaan yang bertanggung jawab.',
-                  textAlign: TextAlign.center,
-                  style: TextStyle(
-                    fontSize: 13.5,
-                    color: Colors.black87,
-                    height: 1.5,
-                  ),
-                ),
-              ),
-              const SizedBox(height: 24),
-
-              // Footer card ala desain Figma dengan bar indikator di atas
-              Container(
-                width: double.infinity,
-                padding: const EdgeInsets.all(20),
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.circular(24),
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.black.withOpacity(0.04),
-                      blurRadius: 18,
-                      offset: const Offset(0, 10),
+      backgroundColor: surfaceColor,
+      body: Column(
+        children: [
+          // --- HEADER SECTION (Hijau di atas) ---
+          Container(
+            width: double.infinity,
+            decoration: const BoxDecoration(
+              color: brandColor,
+              borderRadius: BorderRadius.vertical(bottom: Radius.circular(24)),
+            ),
+            child: SafeArea(
+              bottom: false,
+              child: Padding(
+                padding: const EdgeInsets.fromLTRB(24, 16, 24, 24),
+                child: Row(
+                  children: [
+                    // Logo Badge (Kotak kecil)
+                    Container(
+                      width: 38,
+                      height: 38,
+                      decoration: BoxDecoration(
+                        color: brandSecondary,
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                      child: Center(
+                        child: Image.asset(
+                          'assets/images/Connie_app.png',
+                          width: 26,
+                          height: 26,
+                        ),
+                      ),
+                    ),
+                    const SizedBox(width: 12),
+                    const Text(
+                      'EduConnect',
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 20,
+                        fontWeight: FontWeight.bold,
+                      ),
                     ),
                   ],
                 ),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Container(
-                      height: 4,
-                      width: 80,
-                      decoration: BoxDecoration(
-                        color: const Color(0xFF2B5C43),
-                        borderRadius: BorderRadius.circular(100),
-                      ),
+              ),
+            ),
+          ),
+
+          // --- SCROLLABLE BODY SECTION ---
+          Expanded(
+            child: SingleChildScrollView(
+              padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 32),
+              child: Column(
+                children: [
+                  // --- KARTU UTAMA (Putih) ---
+                  Container(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 24,
+                      vertical: 32,
                     ),
-                    const SizedBox(height: 16),
-                    const Text(
-                      'Tentang Aplikasi',
-                      style: TextStyle(
-                        fontSize: 16,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.black87,
-                      ),
-                    ),
-                    const SizedBox(height: 8),
-                    const Text(
-                      'Aplikasi ini membantu kamu menemukan teman belajar, kolaborasi proyek, dan diskusi akademik secara aman.',
-                      style: TextStyle(
-                        fontSize: 14,
-                        color: Colors.black54,
-                        height: 1.6,
-                      ),
-                    ),
-                    const SizedBox(height: 16),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        _buildFooterTag('Akademik'),
-                        _buildFooterTag('Kolaborasi'),
-                        _buildFooterTag('Aman'),
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(24),
+                      border: Border.all(color: Colors.grey.shade200),
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.black.withOpacity(0.04),
+                          blurRadius: 20,
+                          offset: const Offset(0, 10),
+                        ),
                       ],
                     ),
-                  ],
-                ),
-              ),
-              const Spacer(),
-
-              CustomButton(
-                text: 'Mulai Daftar',
-                onPressed: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => const RoleScreen()),
-                  );
-                },
-              ),
-              const SizedBox(height: 16),
-
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  const Text(
-                    'Sudah punya akun? ',
-                    style: TextStyle(color: Colors.black54),
-                  ),
-                  TextButton(
-                    style: TextButton.styleFrom(
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: 16,
-                        vertical: 10,
-                      ),
-                      backgroundColor: Colors.white,
-                      foregroundColor: const Color(0xFF2B5C43),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(12),
-                        side: const BorderSide(color: Color(0xFF2B5C43)),
-                      ),
-                    ),
-                    onPressed: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => const AuthScreen(
-                            role: 'Student',
-                            initialLogin: true,
+                    child: Column(
+                      children: [
+                        // Progress bars (5 segment, first active)
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: List.generate(
+                            5,
+                            (index) => Container(
+                              margin: EdgeInsets.only(
+                                right: index == 4 ? 0 : 8,
+                              ),
+                              width: 28,
+                              height: 6,
+                              decoration: BoxDecoration(
+                                color: index == 0 ? brandColor : brandSecondary,
+                                borderRadius: BorderRadius.circular(3),
+                              ),
+                            ),
                           ),
                         ),
-                      );
-                    },
-                    child: const Text(
-                      'Masuk',
-                      style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                        fontSize: 14,
-                      ),
+                        const SizedBox(height: 24),
+
+                        // Mascot Utama
+                        Image.asset(
+                          'assets/images/Connie_app.png',
+                          width: 128,
+                          height: 128,
+                        ),
+                        const SizedBox(height: 24),
+
+                        // Title
+                        const Text(
+                          'Selamat Datang di\nEduConnect',
+                          textAlign: TextAlign.center,
+                          style: TextStyle(
+                            fontSize: 28,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.black87,
+                            height: 1.2,
+                          ),
+                        ),
+                        const SizedBox(height: 12),
+
+                        // Subtitle
+                        const Text(
+                          'Platform kolaborasi akademik untuk mahasiswa Indonesia. Temukan teman belajar yang tepat.',
+                          textAlign: TextAlign.center,
+                          style: TextStyle(
+                            fontSize: 15,
+                            color: Colors.black54,
+                            height: 1.5,
+                          ),
+                        ),
+                        const SizedBox(height: 32),
+
+                        // Consent Box (Kotak Peringatan Akademik)
+                        Container(
+                          padding: const EdgeInsets.all(24),
+                          decoration: BoxDecoration(
+                            color: brandTertiary,
+                            borderRadius: BorderRadius.circular(16),
+                            border: Border.all(color: const Color(0xFFC6DBCD)),
+                          ),
+                          child: Column(
+                            children: [
+                              // Ikon Topi Toga di dalam lingkaran putih
+                              Container(
+                                width: 44,
+                                height: 44,
+                                decoration: const BoxDecoration(
+                                  color: Colors.white,
+                                  shape: BoxShape.circle,
+                                ),
+                                child: Center(
+                                  child: Image.asset(
+                                    'lib/models/Book_Toge.png',
+                                    width: 32,
+                                    height: 32,
+                                    fit: BoxFit.contain,
+                                  ),
+                                ),
+                              ),
+                              const SizedBox(height: 12),
+                              // RichText agar teks "untuk tujuan akademik" menjadi tebal & hijau
+                              RichText(
+                                textAlign: TextAlign.center,
+                                text: const TextSpan(
+                                  style: TextStyle(
+                                    fontSize: 14,
+                                    color: Colors.black87,
+                                    height: 1.5,
+                                  ),
+                                  children: [
+                                    TextSpan(text: 'Platform ini digunakan '),
+                                    TextSpan(
+                                      text: 'untuk tujuan akademik',
+                                      style: TextStyle(
+                                        fontWeight: FontWeight.bold,
+                                        color: brandColor,
+                                      ),
+                                    ),
+                                    TextSpan(
+                                      text:
+                                          '. Dengan mendaftar, kamu menyetujui penggunaan yang bertanggung jawab.',
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                        const SizedBox(height: 32),
+
+                        // Tombol Utama (Solid Green)
+                        ElevatedButton(
+                          onPressed: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => const RoleScreen(),
+                              ),
+                            );
+                          },
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: brandColor,
+                            foregroundColor: Colors.white,
+                            minimumSize: const Size(double.infinity, 56),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(12),
+                            ),
+                            elevation: 0,
+                          ),
+                          child: const Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Text(
+                                'Mulai Daftar',
+                                style: TextStyle(
+                                  fontSize: 18,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                              SizedBox(width: 8),
+                              Icon(Icons.arrow_forward, size: 20),
+                            ],
+                          ),
+                        ),
+                      ],
                     ),
                   ),
+
+                  const SizedBox(height: 32),
+
+                  // --- LINK MASUK DI BAWAH KARTU ---
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      const Text(
+                        'Sudah punya akun? ',
+                        style: TextStyle(color: Colors.black54, fontSize: 16),
+                      ),
+                      GestureDetector(
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => const AuthScreen(
+                                role: 'Student',
+                                initialLogin: true,
+                              ),
+                            ),
+                          );
+                        },
+                        child: const Text(
+                          'Masuk',
+                          style: TextStyle(
+                            color: brandColor,
+                            fontWeight: FontWeight.bold,
+                            fontSize: 16,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 24),
                 ],
               ),
-              const SizedBox(height: 24),
-            ],
+            ),
           ),
-        ),
-      ),
-    );
-  }
-
-  Widget _buildFooterTag(String label) {
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-      decoration: BoxDecoration(
-        color: const Color(0xFFF3F6F2),
-        borderRadius: BorderRadius.circular(12),
-      ),
-      child: Text(
-        label,
-        style: const TextStyle(
-          fontSize: 12,
-          fontWeight: FontWeight.bold,
-          color: Color(0xFF2B5C43),
-        ),
+        ],
       ),
     );
   }
