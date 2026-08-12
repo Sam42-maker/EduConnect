@@ -62,6 +62,64 @@ class WelcomeScreen extends StatelessWidget {
                   ),
                 ),
               ),
+              const SizedBox(height: 24),
+
+              // Footer card ala desain Figma dengan bar indikator di atas
+              Container(
+                width: double.infinity,
+                padding: const EdgeInsets.all(20),
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(24),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.black.withOpacity(0.04),
+                      blurRadius: 18,
+                      offset: const Offset(0, 10),
+                    ),
+                  ],
+                ),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Container(
+                      height: 4,
+                      width: 80,
+                      decoration: BoxDecoration(
+                        color: const Color(0xFF2B5C43),
+                        borderRadius: BorderRadius.circular(100),
+                      ),
+                    ),
+                    const SizedBox(height: 16),
+                    const Text(
+                      'Tentang Aplikasi',
+                      style: TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.black87,
+                      ),
+                    ),
+                    const SizedBox(height: 8),
+                    const Text(
+                      'Aplikasi ini membantu kamu menemukan teman belajar, kolaborasi proyek, dan diskusi akademik secara aman.',
+                      style: TextStyle(
+                        fontSize: 14,
+                        color: Colors.black54,
+                        height: 1.6,
+                      ),
+                    ),
+                    const SizedBox(height: 16),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        _buildFooterTag('Akademik'),
+                        _buildFooterTag('Kolaborasi'),
+                        _buildFooterTag('Aman'),
+                      ],
+                    ),
+                  ],
+                ),
+              ),
               const Spacer(),
 
               CustomButton(
@@ -119,6 +177,24 @@ class WelcomeScreen extends StatelessWidget {
               const SizedBox(height: 24),
             ],
           ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildFooterTag(String label) {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+      decoration: BoxDecoration(
+        color: const Color(0xFFF3F6F2),
+        borderRadius: BorderRadius.circular(12),
+      ),
+      child: Text(
+        label,
+        style: const TextStyle(
+          fontSize: 12,
+          fontWeight: FontWeight.bold,
+          color: Color(0xFF2B5C43),
         ),
       ),
     );
