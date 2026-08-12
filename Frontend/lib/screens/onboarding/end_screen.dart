@@ -23,27 +23,30 @@ class EndScreen extends StatelessWidget {
                 children: [
                   // Latar Belakang Hijau Pastel (Senada dengan desain)
                   Container(
-                    width: 250,
-                    height: 250,
+                    width: 260,
+                    height: 260,
                     decoration: BoxDecoration(
                       color: const Color(0xFFD7E8D5),
                       borderRadius: BorderRadius.circular(32),
                     ),
                   ),
-                  // Konten Teks & Icon Maskot
-                  const Column(
+                  Column(
+                    mainAxisSize: MainAxisSize.min,
                     children: [
-                      // TODO: Ganti Icon ini dengan aset gambar burung gagakmu nanti
-                      Icon(Icons.school, size: 90, color: Color(0xFF2B5C43)),
-                      SizedBox(height: 16),
-                      Text(
+                      Image.asset(
+                        'assets/images/Connie_app.png',
+                        width: 130,
+                        height: 130,
+                      ),
+                      const SizedBox(height: 20),
+                      const Text(
                         'Selamat\nBelajar',
                         textAlign: TextAlign.center,
                         style: TextStyle(
-                          fontSize: 40,
+                          fontSize: 36,
                           fontWeight: FontWeight.w900,
                           color: Color(0xFF2B5C43),
-                          height: 1.2, // Mengatur jarak antar baris agar rapi
+                          height: 1.1,
                         ),
                       ),
                     ],

@@ -1,11 +1,14 @@
 import 'package:flutter/material.dart';
 import '../../widgets/custom_button.dart';
 import '../../widgets/custom_textfield.dart';
-// import 'akademik_screen.dart'; // Akan di-uncomment di Fase 4
+import 'akademik_screen.dart';
 
 class AuthScreen extends StatefulWidget {
   final String role; // Menerima data peran dari RoleScreen
-  const AuthScreen({Key? key, required this.role}) : super(key: key);
+  final bool initialLogin;
+
+  const AuthScreen({Key? key, required this.role, this.initialLogin = false})
+    : super(key: key);
 
   @override
   State<AuthScreen> createState() => _AuthScreenState();
@@ -13,7 +16,13 @@ class AuthScreen extends StatefulWidget {
 
 class _AuthScreenState extends State<AuthScreen> {
   // State untuk mengontrol tampilan (True = Layar Login, False = Layar Sign Up)
-  bool isLogin = false;
+  late bool isLogin;
+
+  @override
+  void initState() {
+    super.initState();
+    isLogin = widget.initialLogin;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -86,8 +95,12 @@ class _AuthScreenState extends State<AuthScreen> {
               CustomButton(
                 text: 'Lanjut',
                 onPressed: () {
-                  // TODO: Arahkan ke AkademikScreen (Fase 4)
-                  // Navigator.push(context, MaterialPageRoute(builder: (context) => const AkademikScreen()));
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => const AkademikScreen(),
+                    ),
+                  );
                 },
               ),
               const SizedBox(height: 24),

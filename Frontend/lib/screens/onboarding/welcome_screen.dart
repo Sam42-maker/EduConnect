@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import '../../widgets/custom_button.dart';
+import 'auth_screen.dart';
+import 'role_screen.dart';
 
 class WelcomeScreen extends StatelessWidget {
   const WelcomeScreen({Key? key}) : super(key: key);
@@ -7,26 +9,25 @@ class WelcomeScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(
-        0xFFF9F9F9,
-      ), // Warna latar terang/putih tulang
+      backgroundColor: const Color(0xFFF9F9F9),
       body: SafeArea(
         child: Padding(
-          padding: const EdgeInsets.all(24.0),
+          padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 16.0),
           child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              const Spacer(),
-
-              // Nanti ganti dengan gambar maskot burung gagak
-              const Icon(Icons.menu_book, size: 120, color: Color(0xFF2B5C43)),
-              const SizedBox(height: 40),
+              const SizedBox(height: 12),
+              Image.asset(
+                'assets/images/Connie_app.png',
+                width: 120,
+                height: 120,
+              ),
+              const SizedBox(height: 32),
 
               const Text(
                 'Selamat Datang di\nEduConnect',
                 textAlign: TextAlign.center,
                 style: TextStyle(
-                  fontSize: 28,
+                  fontSize: 30,
                   fontWeight: FontWeight.bold,
                   color: Colors.black87,
                 ),
@@ -36,35 +37,44 @@ class WelcomeScreen extends StatelessWidget {
               const Text(
                 'Platform kolaborasi akademik untuk mahasiswa Indonesia. Temukan rekan belajar yang tepat.',
                 textAlign: TextAlign.center,
-                style: TextStyle(fontSize: 14, color: Colors.black54),
+                style: TextStyle(
+                  fontSize: 14,
+                  color: Colors.black54,
+                  height: 1.6,
+                ),
               ),
-              const SizedBox(height: 40),
+              const SizedBox(height: 28),
 
-              // Kotak peringatan hijau pastel
               Container(
-                padding: const EdgeInsets.all(16),
+                width: double.infinity,
+                padding: const EdgeInsets.all(18),
                 decoration: BoxDecoration(
                   color: const Color(0xFFD7E8D5),
-                  borderRadius: BorderRadius.circular(12),
+                  borderRadius: BorderRadius.circular(20),
                 ),
                 child: const Text(
                   'Platform ini digunakan untuk tujuan akademik. Dengan mendaftar, kamu menyetujui penggunaan yang bertanggung jawab.',
                   textAlign: TextAlign.center,
-                  style: TextStyle(fontSize: 12, color: Colors.black87),
+                  style: TextStyle(
+                    fontSize: 13.5,
+                    color: Colors.black87,
+                    height: 1.5,
+                  ),
                 ),
               ),
               const Spacer(),
 
-              // Memanggil komponen tombol dari Fase 1
               CustomButton(
                 text: 'Mulai Daftar',
                 onPressed: () {
-                  // TODO: Arahkan ke RoleScreen (Pilih Mentor/Student) di Fase 3
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => const RoleScreen()),
+                  );
                 },
               ),
               const SizedBox(height: 16),
 
-              // Teks Login di bawah
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
@@ -72,20 +82,41 @@ class WelcomeScreen extends StatelessWidget {
                     'Sudah punya akun? ',
                     style: TextStyle(color: Colors.black54),
                   ),
-                  GestureDetector(
-                    onTap: () {
-                      // TODO: Arahkan ke AuthScreen (Login) di Fase 3
+                  TextButton(
+                    style: TextButton.styleFrom(
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 16,
+                        vertical: 10,
+                      ),
+                      backgroundColor: Colors.white,
+                      foregroundColor: const Color(0xFF2B5C43),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(12),
+                        side: const BorderSide(color: Color(0xFF2B5C43)),
+                      ),
+                    ),
+                    onPressed: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => const AuthScreen(
+                            role: 'Student',
+                            initialLogin: true,
+                          ),
+                        ),
+                      );
                     },
                     child: const Text(
                       'Masuk',
                       style: TextStyle(
                         fontWeight: FontWeight.bold,
-                        color: Colors.black87,
+                        fontSize: 14,
                       ),
                     ),
                   ),
                 ],
               ),
+              const SizedBox(height: 24),
             ],
           ),
         ),
