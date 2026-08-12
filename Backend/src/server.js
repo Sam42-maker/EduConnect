@@ -6,6 +6,7 @@ const socketIo = require('socket.io');
 
 const sequelize = require('./config/database');
 const authRoutes = require('./routes/authRoutes');
+const matchRoutes = require('./routes/matchRoutes');
 
 const app = express();
 const server = http.createServer(app);
@@ -16,6 +17,7 @@ const io = socketIo(server, {
 app.use(express.json());
 app.use(cors());
 app.use('/api/auth', authRoutes);
+app.use('/api/matches', matchRoutes);
 
 io.on('connection', (socket) => {
   console.log('User connected via Socket.io:', socket.id);
