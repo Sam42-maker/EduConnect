@@ -34,15 +34,12 @@ class WelcomeScreen extends StatelessWidget {
                     Container(
                       width: 38,
                       height: 38,
-                      decoration: BoxDecoration(
-                        color: brandSecondary,
-                        borderRadius: BorderRadius.circular(8),
-                      ),
+                      decoration: BoxDecoration(color: brandSecondary),
                       child: Center(
                         child: Image.asset(
                           'assets/images/Connie_app.png',
-                          width: 26,
-                          height: 26,
+                          width: 56,
+                          height: 56,
                         ),
                       ),
                     ),
@@ -75,7 +72,10 @@ class WelcomeScreen extends StatelessWidget {
                     ),
                     decoration: BoxDecoration(
                       color: Colors.white,
-                      borderRadius: BorderRadius.circular(24),
+                      borderRadius: const BorderRadius.vertical(
+                        top: Radius.circular(24),
+                        bottom: Radius.zero,
+                      ),
                       border: Border.all(color: Colors.grey.shade200),
                       boxShadow: [
                         BoxShadow(
@@ -96,7 +96,7 @@ class WelcomeScreen extends StatelessWidget {
                               margin: EdgeInsets.only(
                                 right: index == 4 ? 0 : 8,
                               ),
-                              width: 28,
+                              width: 52,
                               height: 6,
                               decoration: BoxDecoration(
                                 color: index == 0 ? brandColor : brandSecondary,
@@ -105,13 +105,13 @@ class WelcomeScreen extends StatelessWidget {
                             ),
                           ),
                         ),
-                        const SizedBox(height: 24),
+                        const SizedBox(height: 120),
 
                         // Mascot Utama
                         Image.asset(
                           'assets/images/Connie_app.png',
-                          width: 128,
-                          height: 128,
+                          width: 160,
+                          height: 160,
                         ),
                         const SizedBox(height: 24),
 
@@ -144,9 +144,11 @@ class WelcomeScreen extends StatelessWidget {
                         Container(
                           padding: const EdgeInsets.all(24),
                           decoration: BoxDecoration(
-                            color: brandTertiary,
-                            borderRadius: BorderRadius.circular(16),
-                            border: Border.all(color: const Color(0xFFC6DBCD)),
+                            color: const Color(0xFFB8F7B4).withOpacity(0.05),
+                            borderRadius: BorderRadius.circular(20),
+                            border: Border.all(
+                              color: const Color(0xFFA69D9D).withOpacity(0.2),
+                            ),
                           ),
                           child: Column(
                             children: [
@@ -161,8 +163,8 @@ class WelcomeScreen extends StatelessWidget {
                                 child: Center(
                                   child: Image.asset(
                                     'lib/models/Book_Toge.png',
-                                    width: 32,
-                                    height: 32,
+                                    width: 100,
+                                    height: 100,
                                     fit: BoxFit.contain,
                                   ),
                                 ),
@@ -236,40 +238,45 @@ class WelcomeScreen extends StatelessWidget {
                     ),
                   ),
 
-                  const SizedBox(height: 32),
-
-                  // --- LINK MASUK DI BAWAH KARTU ---
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      const Text(
-                        'Sudah punya akun? ',
-                        style: TextStyle(color: Colors.black54, fontSize: 16),
-                      ),
-                      GestureDetector(
-                        onTap: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => const AuthScreen(
-                                role: 'Student',
-                                initialLogin: true,
+                  // --- LINK MASUK DI BAWAH KARTU (No Radius) ---
+                  Container(
+                    width: double.infinity,
+                    color: Colors.white,
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 24,
+                      vertical: 24,
+                    ),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        const Text(
+                          'Sudah punya akun? ',
+                          style: TextStyle(color: Colors.black54, fontSize: 16),
+                        ),
+                        GestureDetector(
+                          onTap: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => const AuthScreen(
+                                  role: 'Student',
+                                  initialLogin: true,
+                                ),
                               ),
+                            );
+                          },
+                          child: const Text(
+                            'Masuk',
+                            style: TextStyle(
+                              color: brandColor,
+                              fontWeight: FontWeight.bold,
+                              fontSize: 16,
                             ),
-                          );
-                        },
-                        child: const Text(
-                          'Masuk',
-                          style: TextStyle(
-                            color: brandColor,
-                            fontWeight: FontWeight.bold,
-                            fontSize: 16,
                           ),
                         ),
-                      ),
-                    ],
+                      ],
+                    ),
                   ),
-                  const SizedBox(height: 24),
                 ],
               ),
             ),

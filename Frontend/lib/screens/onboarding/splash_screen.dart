@@ -68,37 +68,138 @@ class _SplashScreenState extends State<SplashScreen>
 
   @override
   Widget build(BuildContext context) {
+    const Color lightGreen = Color(0xFFB8F7B4);
+    const Color darkGreen = Color(0xFF1B4332);
+    const Color brandColor = Color(0xFF2B5C43);
+    const Color brandSecondary = Color(0xFFD7E8D5);
+
     return Scaffold(
-      backgroundColor: const Color(0xFFD7E8D5), // Warna hijau pastel EduConnect
-      body: AnimatedBuilder(
-        animation: _controller,
-        builder: (context, child) {
-          return Opacity(
-            opacity: _opacityAnimation.value,
-            child: Transform.scale(scale: _scaleAnimation.value, child: child),
-          );
-        },
-        child: Center(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
+      backgroundColor: lightGreen,
+      body: Stack(
+        children: [
+          Column(
             children: [
-              Image.asset(
-                'assets/images/Connie_app.png',
-                width: 120,
-                height: 120,
+              // --- HEADER SECTION ---
+              Container(
+                width: double.infinity,
+                decoration: const BoxDecoration(
+                  color: brandColor,
+                  borderRadius: BorderRadius.vertical(
+                    bottom: Radius.circular(24),
+                  ),
+                ),
+                child: SafeArea(
+                  bottom: false,
+                  child: Padding(
+                    padding: const EdgeInsets.fromLTRB(24, 16, 24, 24),
+                    child: Row(
+                      children: [
+                        // Logo Badge (Kotak kecil)
+                        Container(
+                          width: 38,
+                          height: 38,
+                          decoration: BoxDecoration(color: brandSecondary),
+                          child: Center(
+                            child: Image.asset(
+                              'assets/images/Connie_app.png',
+                              width: 26,
+                              height: 26,
+                            ),
+                          ),
+                        ),
+                        const SizedBox(width: 12),
+                        const Text(
+                          'EduConnect',
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 20,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
               ),
-              const SizedBox(height: 20),
-              const Text(
-                'EduConnect',
-                style: TextStyle(
-                  fontSize: 32,
-                  fontWeight: FontWeight.bold,
-                  color: Color(0xFF2B5C43),
+
+              // --- MAIN CONTENT WITH TWO LAYERS ---
+              Expanded(
+                child: Row(
+                  children: [
+                    // Left side - Light Green
+                    Expanded(flex: 35, child: Container(color: lightGreen)),
+
+                    // Right side - Dark Green
+                    Expanded(flex: 65, child: Container(color: darkGreen)),
+                  ],
                 ),
               ),
             ],
           ),
-        ),
+
+          // --- CENTERED CONTENT OVERLAY ---
+          Center(
+            child: AnimatedBuilder(
+              animation: _controller,
+              builder: (context, child) {
+                return Opacity(
+                  opacity: _opacityAnimation.value,
+                  child: Transform.scale(
+                    scale: _scaleAnimation.value,
+                    child: child,
+                  ),
+                );
+              },
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Container(
+                    padding: const EdgeInsets.all(20),
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(24),
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.black.withOpacity(0.1),
+                          blurRadius: 20,
+                          offset: const Offset(0, 10),
+                        ),
+                      ],
+                    ),
+                    child: Image.asset(
+                      'assets/images/Connie_app.png',
+                      width: 160,
+                      height: 160,
+                    ),
+                  ),
+                  const SizedBox(height: 30),
+                  RichText(
+                    text: const TextSpan(
+                      children: [
+                        TextSpan(
+                          text: 'Edu',
+                          style: TextStyle(
+                            fontSize: 40,
+                            fontWeight: FontWeight.bold,
+                            color: Color(0xFF1B4332),
+                          ),
+                        ),
+                        TextSpan(
+                          text: 'Connect',
+                          style: TextStyle(
+                            fontSize: 40,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.white,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ],
       ),
     );
   }
