@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import '../../widgets/custom_button.dart';
 import '../../widgets/custom_textfield.dart';
 import '../../widgets/progress_step_indicator.dart';
+import '../../services/api_client.dart';
 import 'akademik_screen.dart';
 
 class AuthScreen extends StatefulWidget {
@@ -18,6 +19,9 @@ class AuthScreen extends StatefulWidget {
 class _AuthScreenState extends State<AuthScreen> {
   late bool isLogin;
   final TextEditingController _fullNameController = TextEditingController();
+  final TextEditingController _emailController = TextEditingController();
+  final TextEditingController _passwordController = TextEditingController();
+  bool isLoading = false;
 
   @override
   void initState() {
@@ -28,6 +32,8 @@ class _AuthScreenState extends State<AuthScreen> {
   @override
   void dispose() {
     _fullNameController.dispose();
+    _emailController.dispose();
+    _passwordController.dispose();
     super.dispose();
   }
 
@@ -120,13 +126,15 @@ class _AuthScreenState extends State<AuthScreen> {
                       ),
                       const SizedBox(height: 16),
                     ],
-                    const CustomTextField(
+                    CustomTextField(
+                      controller: _emailController,
                       label: 'Alamat Gmail',
                       hintText: 'nama@gmail.com',
                       keyboardType: TextInputType.emailAddress,
                     ),
                     const SizedBox(height: 16),
-                    const CustomTextField(
+                    CustomTextField(
+                      controller: _passwordController,
                       label: 'Password',
                       hintText: 'Enter Password',
                       isPassword: true,
@@ -141,22 +149,63 @@ class _AuthScreenState extends State<AuthScreen> {
                       const SizedBox(height: 16),
                     ],
                     const SizedBox(height: 32),
-                    CustomButton(
-                      text: 'Lanjut',
-                      onPressed: () {
-                        final userName = _fullNameController.text.trim();
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => AkademikScreen(
-                              userName: userName.isNotEmpty
-                                  ? userName
-                                  : 'Anindya Putri',
-                            ),
+                    isLoading
+                        ? const Center(child: CircularProgressIndicator())
+                        : CustomButton(
+                            text: 'Lanjut',
+                            onPressed: () async {
+                              setState(() {
+                                isLoading = true;
+                              });
+
+                              final email = _emailController.text.trim();
+                              final password = _passwordController.text.trim();
+                              final fullName = _fullNameController.text.trim();
+
+                              Map<String, dynamic> result;
+                              if (isLogin) {
+                                result = await ApiClient.login(
+                                  email: email,
+                                  password: password,
+                                );
+                              } else {
+                                result = await ApiClient.register(
+                                  fullName: fullName,
+                                  email: email,
+                                  password: password,
+                                  role: widget.role,
+                                );
+                              }
+
+                              setState(() {
+                                isLoading = false;
+                              });
+
+                              if (result.containsKey('token') || result['message']?.contains('berhasil') == true) {
+                                // Sukses -> Lanjut ke AkademikScreen (Onboarding selanjutnya)
+                                if (!mounted) return;
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) => AkademikScreen(
+                                      userName: fullName.isNotEmpty
+                                          ? fullName
+                                          : (result['user'] != null ? result['user']['email'] : 'Anindya Putri'),
+                                    ),
+                                  ),
+                                );
+                              } else {
+                                // Gagal -> Tampilkan snackbar peringatan
+                                if (!mounted) return;
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  SnackBar(
+                                    content: Text(result['message'] ?? 'Login gagal'),
+                                    backgroundColor: Colors.red,
+                                  ),
+                                );
+                              }
+                            },
                           ),
-                        );
-                      },
-                    ),
                     const SizedBox(height: 24),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,
