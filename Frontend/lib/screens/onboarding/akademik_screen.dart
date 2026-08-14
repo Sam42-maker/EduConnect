@@ -6,7 +6,10 @@ import '../../widgets/progress_step_indicator.dart';
 import 'minat_screen.dart';
 
 class AkademikScreen extends StatefulWidget {
-  const AkademikScreen({Key? key}) : super(key: key);
+  final String userName;
+
+  const AkademikScreen({Key? key, this.userName = 'Anindya Putri'})
+    : super(key: key);
 
   @override
   State<AkademikScreen> createState() => _AkademikScreenState();
@@ -170,7 +173,8 @@ class _AkademikScreenState extends State<AkademikScreen> {
                         Navigator.push(
                           context,
                           MaterialPageRoute(
-                            builder: (context) => const MinatScreen(),
+                            builder: (context) =>
+                                MinatScreen(userName: widget.userName),
                           ),
                         );
                       },

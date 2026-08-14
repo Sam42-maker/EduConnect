@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
 
 class HomeScreen extends StatelessWidget {
-  const HomeScreen({Key? key}) : super(key: key);
+  final String userName;
+
+  const HomeScreen({Key? key, this.userName = 'Anindya Putri'})
+    : super(key: key);
 
   final Color brandColor = const Color(0xFF2B5C43);
   final Color bgColor = const Color(0xFFF9F9F9);
@@ -128,9 +131,9 @@ class HomeScreen extends StatelessWidget {
                     style: TextStyle(color: Colors.white70, fontSize: 14),
                   ),
                   const SizedBox(height: 4),
-                  const Text(
-                    'Anindya Putri',
-                    style: TextStyle(
+                  Text(
+                    userName,
+                    style: const TextStyle(
                       color: Colors.white,
                       fontSize: 24,
                       fontWeight: FontWeight.bold,
@@ -150,7 +153,7 @@ class HomeScreen extends StatelessWidget {
                 radius: 28,
                 backgroundColor: brandSecondary,
                 child: Text(
-                  'A',
+                  userName.isNotEmpty ? userName.trim()[0].toUpperCase() : 'A',
                   style: TextStyle(
                     color: brandColor,
                     fontSize: 24,
@@ -642,9 +645,7 @@ class HomeScreen extends StatelessWidget {
                     children: [
                       CircleAvatar(
                         radius: 20,
-                        backgroundColor: Color(
-                          int.parse(e['color']!, radix: 16),
-                        ),
+                        backgroundColor: Color(int.parse(e['color']!)),
                         child: Text(
                           e['initial']!,
                           style: const TextStyle(

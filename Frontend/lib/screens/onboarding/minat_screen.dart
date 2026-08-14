@@ -5,7 +5,10 @@ import '../../widgets/progress_step_indicator.dart';
 import 'end_screen.dart'; // Sudah di-uncomment di Fase 5
 
 class MinatScreen extends StatefulWidget {
-  const MinatScreen({Key? key}) : super(key: key);
+  final String userName;
+
+  const MinatScreen({Key? key, this.userName = 'Anindya Putri'})
+    : super(key: key);
 
   @override
   State<MinatScreen> createState() => _MinatScreenState();
@@ -243,7 +246,8 @@ class _MinatScreenState extends State<MinatScreen> {
                         Navigator.push(
                           context,
                           MaterialPageRoute(
-                            builder: (context) => const EndScreen(),
+                            builder: (context) =>
+                                EndScreen(userName: widget.userName),
                           ),
                         );
                       },

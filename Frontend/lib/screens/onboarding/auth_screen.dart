@@ -17,11 +17,18 @@ class AuthScreen extends StatefulWidget {
 
 class _AuthScreenState extends State<AuthScreen> {
   late bool isLogin;
+  final TextEditingController _fullNameController = TextEditingController();
 
   @override
   void initState() {
     super.initState();
     isLogin = widget.initialLogin;
+  }
+
+  @override
+  void dispose() {
+    _fullNameController.dispose();
+    super.dispose();
   }
 
   @override
@@ -106,7 +113,8 @@ class _AuthScreenState extends State<AuthScreen> {
                     ),
                     const SizedBox(height: 32),
                     if (!isLogin) ...[
-                      const CustomTextField(
+                      CustomTextField(
+                        controller: _fullNameController,
                         label: 'Full Name',
                         hintText: 'Enter Name',
                       ),
@@ -136,10 +144,15 @@ class _AuthScreenState extends State<AuthScreen> {
                     CustomButton(
                       text: 'Lanjut',
                       onPressed: () {
+                        final userName = _fullNameController.text.trim();
                         Navigator.push(
                           context,
                           MaterialPageRoute(
-                            builder: (context) => const AkademikScreen(),
+                            builder: (context) => AkademikScreen(
+                              userName: userName.isNotEmpty
+                                  ? userName
+                                  : 'Anindya Putri',
+                            ),
                           ),
                         );
                       },

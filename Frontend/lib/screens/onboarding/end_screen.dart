@@ -2,8 +2,13 @@ import 'package:flutter/material.dart';
 import '../../widgets/custom_button.dart';
 import '../../widgets/progress_step_indicator.dart';
 
+import '../main_navigation_screen.dart';
+
 class EndScreen extends StatelessWidget {
-  const EndScreen({Key? key}) : super(key: key);
+  final String userName;
+
+  const EndScreen({Key? key, this.userName = 'Anindya Putri'})
+    : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -107,13 +112,13 @@ class EndScreen extends StatelessWidget {
                     CustomButton(
                       text: 'Mulai ➔',
                       onPressed: () {
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          const SnackBar(
-                            content: Text(
-                              'Hore! Alur Onboarding Selesai! Masuk ke Home...',
-                            ),
-                            backgroundColor: Color(0xFF2B5C43),
+                        Navigator.pushAndRemoveUntil(
+                          context,
+                          MaterialPageRoute(
+                            builder: (_) =>
+                                MainNavigationScreen(userName: userName),
                           ),
+                          (route) => false,
                         );
                       },
                     ),

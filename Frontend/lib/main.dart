@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'screens/main_navigation_screen.dart';
+import 'screens/onboarding/welcome_screen.dart';
 
 void main() {
   runApp(const EduConnectApp());
@@ -17,7 +17,7 @@ class EduConnectApp extends StatelessWidget {
         primaryColor: const Color(0xFF2B5C43), // Pine Green
         scaffoldBackgroundColor: const Color(0xFFF9F9F9),
       ),
-      home: const MainNavigationScreen(),
+      home: const WelcomeScreen(),
     );
   }
 }

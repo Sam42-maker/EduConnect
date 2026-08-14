@@ -2,10 +2,13 @@ import 'package:flutter/material.dart';
 import 'home_screen.dart';
 import 'discover/discover_screen.dart';
 import 'chat/chat_screen.dart';
+import 'mentor/mentor_screen.dart';
 import 'profile/profile_screen.dart';
 
 class MainNavigationScreen extends StatefulWidget {
-  const MainNavigationScreen({super.key});
+  final String userName;
+
+  const MainNavigationScreen({super.key, this.userName = 'Anindya Putri'});
 
   @override
   State<MainNavigationScreen> createState() => _MainNavigationScreenState();
@@ -16,17 +19,18 @@ class _MainNavigationScreenState extends State<MainNavigationScreen> {
 
   static const Color brandColor = Color(0xFF2B5C43);
 
-  final List<Widget> _screens = [
-    const HomeScreen(),
-    const DiscoverScreen(),
-    const ChatScreen(),
-    const ProfileScreen(),
-  ];
-
   @override
   Widget build(BuildContext context) {
+    final screens = [
+      HomeScreen(userName: widget.userName),
+      const DiscoverScreen(),
+      const MentorScreen(),
+      const ChatScreen(),
+      const ProfileScreen(),
+    ];
+
     return Scaffold(
-      body: IndexedStack(index: _selectedIndex, children: _screens),
+      body: IndexedStack(index: _selectedIndex, children: screens),
       bottomNavigationBar: BottomNavigationBar(
         currentIndex: _selectedIndex,
         type: BottomNavigationBarType.fixed,
@@ -46,6 +50,10 @@ class _MainNavigationScreenState extends State<MainNavigationScreen> {
           BottomNavigationBarItem(
             icon: Icon(Icons.explore_rounded),
             label: 'Discover',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.school_rounded),
+            label: 'Mentor',
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.chat_bubble_rounded),
