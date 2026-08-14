@@ -82,12 +82,7 @@ class _SplashScreenState extends State<SplashScreen>
               // --- HEADER SECTION ---
               Container(
                 width: double.infinity,
-                decoration: const BoxDecoration(
-                  color: brandColor,
-                  borderRadius: BorderRadius.vertical(
-                    bottom: Radius.circular(24),
-                  ),
-                ),
+                decoration: const BoxDecoration(color: brandColor),
                 child: SafeArea(
                   bottom: false,
                   child: Padding(
@@ -96,14 +91,14 @@ class _SplashScreenState extends State<SplashScreen>
                       children: [
                         // Logo Badge (Kotak kecil)
                         Container(
-                          width: 38,
-                          height: 38,
+                          width: 56,
+                          height: 56,
                           decoration: BoxDecoration(color: brandSecondary),
                           child: Center(
                             child: Image.asset(
                               'assets/images/Connie_app.png',
-                              width: 26,
-                              height: 26,
+                              width: 56,
+                              height: 56,
                             ),
                           ),
                         ),
@@ -130,7 +125,7 @@ class _SplashScreenState extends State<SplashScreen>
                     Expanded(flex: 35, child: Container(color: lightGreen)),
 
                     // Right side - Dark Green
-                    Expanded(flex: 65, child: Container(color: darkGreen)),
+                    Expanded(flex: 50, child: Container(color: darkGreen)),
                   ],
                 ),
               ),

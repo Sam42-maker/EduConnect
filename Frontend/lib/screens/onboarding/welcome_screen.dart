@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../../widgets/progress_step_indicator.dart';
 import 'auth_screen.dart';
 import 'role_screen.dart';
 
@@ -17,13 +18,10 @@ class WelcomeScreen extends StatelessWidget {
       backgroundColor: surfaceColor,
       body: Column(
         children: [
-          // --- HEADER SECTION (Hijau di atas) ---
+          // --- HEADER SECTION ---
           Container(
             width: double.infinity,
-            decoration: const BoxDecoration(
-              color: brandColor,
-              borderRadius: BorderRadius.vertical(bottom: Radius.circular(24)),
-            ),
+            decoration: const BoxDecoration(color: brandColor),
             child: SafeArea(
               bottom: false,
               child: Padding(
@@ -87,24 +85,7 @@ class WelcomeScreen extends StatelessWidget {
                     ),
                     child: Column(
                       children: [
-                        // Progress bars (5 segment, first active)
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: List.generate(
-                            5,
-                            (index) => Container(
-                              margin: EdgeInsets.only(
-                                right: index == 4 ? 0 : 8,
-                              ),
-                              width: 52,
-                              height: 6,
-                              decoration: BoxDecoration(
-                                color: index == 0 ? brandColor : brandSecondary,
-                                borderRadius: BorderRadius.circular(3),
-                              ),
-                            ),
-                          ),
-                        ),
+                        ProgressStepIndicator(currentStep: 1),
                         const SizedBox(height: 120),
 
                         // Mascot Utama
