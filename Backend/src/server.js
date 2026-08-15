@@ -13,6 +13,7 @@ const rabbitMq = require("./config/rabbitmq");
 const authRoutes = require("./routes/authRoutes");
 const communityRoutes = require("./routes/communityRoutes");
 const chatRoutes = require("./routes/chatRoutes");
+const profileRoutes = require("./routes/profileRoutes");
 // const matchRoutes = require("./routes/matchRoutes"); // To be rewritten in raw SQL later
 
 const app = express();
@@ -36,6 +37,7 @@ app.use("/assets", express.static(path.join(__dirname, "../assets")));
 app.use("/api/auth", authRoutes);
 app.use("/api/communities", communityRoutes);
 app.use("/api/chats", chatRoutes);
+app.use("/api/profile", profileRoutes);
 // app.use("/api/matches", matchRoutes);
 
 io.on("connection", (socket) => {

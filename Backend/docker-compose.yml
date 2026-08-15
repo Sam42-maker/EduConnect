@@ -1,0 +1,74 @@
+version: '3.8'
+
+services:
+  educonnect-backend:
+    build: .
+    container_name: educonnect_backend
+    ports:
+      - "5000:5000"
+    environment:
+      - PORT=5000
+      - DB_HOST=mysql-db
+      - DB_PORT=3306
+      - DB_USER=root
+      - DB_PASSWORD=rootpassword
+      - DB_NAME=educonnect_db
+      - REDIS_URL=redis://redis-cache:6379
+      - RABBITMQ_URL=amqp://rabbitmq-broker
+      - JWT_SECRET=supersecreteduconnectkey2026
+    depends_on:
+      mysql-db:
+        condition: service_healthy
+      redis-cache:
+        condition: service_started
+      rabbitmq-broker:
+        condition: service_started
+    networks:
+      - educonnect_network
+
+  mysql-db:
+    image: mysql:8.0
+    container_name: educonnect_mysql
+    ports:
+      - "3306:3306"
+    environment:
+      - MYSQL_ROOT_PASSWORD=rootpassword
+      - MYSQL_DATABASE=educonnect_db
+    volumes:
+      - mysql_data:/var/lib/mysql
+      # Automatically initialize the database using init.sql
+      - ./sql/init.sql:/docker-entrypoint-initdb.d/init.sql
+    healthcheck:
+      test: ["CMD", "mysqladmin" ,"ping", "-h", "localhost", "-u", "root", "-prootpassword"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - educonnect_network
+
+  redis-cache:
+    image: redis:alpine
+    container_name: educonnect_redis
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    networks:
+      - educonnect_network
+
+  rabbitmq-broker:
+    image: rabbitmq:3-management-alpine
+    container_name: educonnect_rabbitmq
+    ports:
+      - "5672:5672"   # AMQP protocol port
+      - "15672:15672" # Management UI port
+    networks:
+      - educonnect_network
+
+volumes:
+  mysql_data:
+  redis_data:
+
+networks:
+  educonnect_network:
+    driver: bridge
