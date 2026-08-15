@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../community/community_screen.dart';
 
 class HomeScreen extends StatelessWidget {
   final String userName;
@@ -21,7 +22,7 @@ class HomeScreen extends StatelessWidget {
             _buildTopHeader(),
             const SizedBox(height: 24),
 
-            _buildNewsSection(),
+            _buildNewsSection(context),
             const SizedBox(height: 24),
 
             _buildSectionHeader(
@@ -29,12 +30,12 @@ class HomeScreen extends StatelessWidget {
               subtitle: 'Berdasarkan jurusan, fase, dan minat kamu',
             ),
             const SizedBox(height: 16),
-            _buildRecommendedList(),
+            _buildRecommendedList(context),
             const SizedBox(height: 24),
 
             _buildSectionHeader('Active Now'),
             const SizedBox(height: 12),
-            _buildActiveNowList(),
+            _buildActiveNowList(context),
             const SizedBox(height: 24),
 
             Padding(
@@ -49,12 +50,12 @@ class HomeScreen extends StatelessWidget {
               ),
             ),
             const SizedBox(height: 12),
-            _buildQuickActions(),
+            _buildQuickActions(context),
             const SizedBox(height: 24),
 
             _buildSectionHeader('Communities for You'),
             const SizedBox(height: 12),
-            _buildCommunitiesList(),
+            _buildCommunitiesList(context),
             const SizedBox(height: 12),
 
             _buildMentorCard(),
@@ -232,7 +233,7 @@ class HomeScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildNewsSection() {
+  Widget _buildNewsSection(context) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 20),
       child: Column(
@@ -254,6 +255,13 @@ class HomeScreen extends StatelessWidget {
                       'Seminar dan workshop baru dibuka untuk mahasiswa IF dan DS.',
                   tag: 'Trending',
                   color: const Color(0xFF2B5C43),
+                  onTap: () {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(
+                        content: Text('Membuka berita AI & Data Science...'),
+                      ),
+                    );
+                  },
                 ),
                 const SizedBox(width: 12),
                 _buildNewsCard(
@@ -262,6 +270,13 @@ class HomeScreen extends StatelessWidget {
                       'Konsultasi topik riset dan bimbingan bersama mentor.',
                   tag: 'Event',
                   color: const Color(0xFF4A90E2),
+                  onTap: () {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(
+                        content: Text('Membuka info Skripsi Sprint...'),
+                      ),
+                    );
+                  },
                 ),
               ],
             ),
@@ -276,61 +291,65 @@ class HomeScreen extends StatelessWidget {
     required String subtitle,
     required String tag,
     required Color color,
+    VoidCallback? onTap,
   }) {
-    return Container(
-      width: 250,
-      padding: const EdgeInsets.all(16),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(16),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withOpacity(0.03),
-            blurRadius: 12,
-            offset: const Offset(0, 6),
-          ),
-        ],
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Container(
-            padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 5),
-            decoration: BoxDecoration(
-              color: color.withOpacity(0.12),
-              borderRadius: BorderRadius.circular(20),
+    return GestureDetector(
+      onTap: onTap,
+      child: Container(
+        width: 250,
+        padding: const EdgeInsets.all(16),
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(16),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withOpacity(0.03),
+              blurRadius: 12,
+              offset: const Offset(0, 6),
             ),
-            child: Text(
-              tag,
-              style: TextStyle(
-                color: color,
-                fontSize: 9,
-                fontWeight: FontWeight.bold,
+          ],
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Container(
+              padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 5),
+              decoration: BoxDecoration(
+                color: color.withOpacity(0.12),
+                borderRadius: BorderRadius.circular(20),
+              ),
+              child: Text(
+                tag,
+                style: TextStyle(
+                  color: color,
+                  fontSize: 9,
+                  fontWeight: FontWeight.bold,
+                ),
               ),
             ),
-          ),
-          const SizedBox(height: 14),
-          Text(
-            title,
-            style: const TextStyle(
-              fontSize: 16,
-              fontWeight: FontWeight.bold,
-              color: Colors.black87,
-              height: 1.2,
+            const SizedBox(height: 14),
+            Text(
+              title,
+              style: const TextStyle(
+                fontSize: 16,
+                fontWeight: FontWeight.bold,
+                color: Colors.black87,
+                height: 1.2,
+              ),
             ),
-          ),
-          const SizedBox(height: 8),
-          Text(
-            subtitle,
-            style: const TextStyle(
-              fontSize: 11,
-              color: Colors.black54,
-              height: 1.4,
+            const SizedBox(height: 8),
+            Text(
+              subtitle,
+              style: const TextStyle(
+                fontSize: 11,
+                color: Colors.black54,
+                height: 1.4,
+              ),
+              maxLines: 3,
+              overflow: TextOverflow.ellipsis,
             ),
-            maxLines: 3,
-            overflow: TextOverflow.ellipsis,
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }
@@ -374,7 +393,7 @@ class HomeScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildRecommendedList() {
+  Widget _buildRecommendedList(context) {
     return SizedBox(
       height: 220,
       child: ListView(
@@ -390,6 +409,13 @@ class HomeScreen extends StatelessWidget {
             initial: 'R',
             tags: ['Skripsi', '★ Machine Learning', 'Data Science', 'Python'],
             lastActive: 'Aktif 5 menit lalu',
+            onTap: () {
+              ScaffoldMessenger.of(context).showSnackBar(
+                const SnackBar(
+                  content: Text('Melihat profil Reza Mahardika...'),
+                ),
+              );
+            },
           ),
           const SizedBox(width: 16),
           _buildMatchCard(
@@ -401,6 +427,13 @@ class HomeScreen extends StatelessWidget {
             initial: 'B',
             tags: ['Skripsi', '★ Machine Learning', 'Computer Vision'],
             lastActive: 'Aktif 2 jam lalu',
+            onTap: () {
+              ScaffoldMessenger.of(context).showSnackBar(
+                const SnackBar(
+                  content: Text('Melihat profil Bintang Nugroho...'),
+                ),
+              );
+            },
           ),
         ],
       ),
@@ -416,131 +449,135 @@ class HomeScreen extends StatelessWidget {
     required String initial,
     required List<String> tags,
     required String lastActive,
+    VoidCallback? onTap,
   }) {
-    return Container(
-      width: 260,
-      padding: const EdgeInsets.all(16),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: borderColor.withOpacity(0.5), width: 1.5),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withOpacity(0.02),
-            blurRadius: 10,
-            offset: const Offset(0, 5),
-          ),
-        ],
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Row(
-            children: [
-              Stack(
-                children: [
-                  CircleAvatar(
-                    radius: 22,
-                    backgroundColor: borderColor.withOpacity(0.1),
-                    child: Text(
-                      initial,
-                      style: TextStyle(
-                        color: borderColor,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                  ),
-                  Positioned(
-                    bottom: 0,
-                    right: 0,
-                    child: Container(
-                      width: 12,
-                      height: 12,
-                      decoration: BoxDecoration(
-                        color: Colors.green,
-                        shape: BoxShape.circle,
-                        border: Border.all(color: Colors.white, width: 2),
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-              const SizedBox(width: 12),
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
+    return GestureDetector(
+      onTap: onTap,
+      child: Container(
+        width: 260,
+        padding: const EdgeInsets.all(16),
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(16),
+          border: Border.all(color: borderColor.withOpacity(0.5), width: 1.5),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withOpacity(0.02),
+              blurRadius: 10,
+              offset: const Offset(0, 5),
+            ),
+          ],
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
+              children: [
+                Stack(
                   children: [
-                    Text(
-                      name,
-                      style: const TextStyle(
-                        fontWeight: FontWeight.bold,
-                        fontSize: 14,
+                    CircleAvatar(
+                      radius: 22,
+                      backgroundColor: borderColor.withOpacity(0.1),
+                      child: Text(
+                        initial,
+                        style: TextStyle(
+                          color: borderColor,
+                          fontWeight: FontWeight.bold,
+                        ),
                       ),
                     ),
-                    Text(
-                      major,
-                      style: const TextStyle(
-                        color: Colors.black54,
-                        fontSize: 11,
+                    Positioned(
+                      bottom: 0,
+                      right: 0,
+                      child: Container(
+                        width: 12,
+                        height: 12,
+                        decoration: BoxDecoration(
+                          color: Colors.green,
+                          shape: BoxShape.circle,
+                          border: Border.all(color: Colors.white, width: 2),
+                        ),
                       ),
                     ),
                   ],
                 ),
-              ),
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.end,
-                children: [
-                  Container(
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 6,
-                      vertical: 2,
+                const SizedBox(width: 12),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        name,
+                        style: const TextStyle(
+                          fontWeight: FontWeight.bold,
+                          fontSize: 14,
+                        ),
+                      ),
+                      Text(
+                        major,
+                        style: const TextStyle(
+                          color: Colors.black54,
+                          fontSize: 11,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.end,
+                  children: [
+                    Container(
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 6,
+                        vertical: 2,
+                      ),
+                      decoration: BoxDecoration(
+                        color: borderColor,
+                        borderRadius: BorderRadius.circular(4),
+                      ),
+                      child: Text(
+                        matchPercent,
+                        style: const TextStyle(
+                          color: Colors.white,
+                          fontSize: 10,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
                     ),
-                    decoration: BoxDecoration(
-                      color: borderColor,
-                      borderRadius: BorderRadius.circular(4),
-                    ),
-                    child: Text(
-                      matchPercent,
-                      style: const TextStyle(
-                        color: Colors.white,
-                        fontSize: 10,
+                    const SizedBox(height: 2),
+                    Text(
+                      matchType,
+                      style: TextStyle(
+                        color: borderColor,
+                        fontSize: 8,
                         fontWeight: FontWeight.bold,
                       ),
                     ),
-                  ),
-                  const SizedBox(height: 2),
-                  Text(
-                    matchType,
-                    style: TextStyle(
-                      color: borderColor,
-                      fontSize: 8,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                ],
-              ),
-            ],
-          ),
-          const SizedBox(height: 16),
-          Wrap(
-            spacing: 6,
-            runSpacing: 6,
-            children: tags
-                .map((tag) => _buildTagChip(tag, tag.contains('★')))
-                .toList(),
-          ),
-          const Spacer(),
-          Row(
-            children: [
-              const Icon(Icons.access_time, size: 12, color: Colors.black38),
-              const SizedBox(width: 4),
-              Text(
-                lastActive,
-                style: const TextStyle(color: Colors.black38, fontSize: 10),
-              ),
-            ],
-          ),
-        ],
+                  ],
+                ),
+              ],
+            ),
+            const SizedBox(height: 16),
+            Wrap(
+              spacing: 6,
+              runSpacing: 6,
+              children: tags
+                  .map((tag) => _buildTagChip(tag, tag.contains('★')))
+                  .toList(),
+            ),
+            const Spacer(),
+            Row(
+              children: [
+                const Icon(Icons.access_time, size: 12, color: Colors.black38),
+                const SizedBox(width: 4),
+                Text(
+                  lastActive,
+                  style: const TextStyle(color: Colors.black38, fontSize: 10),
+                ),
+              ],
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -564,7 +601,7 @@ class HomeScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildActiveNowList() {
+  Widget _buildActiveNowList(context) {
     final List<Map<String, String>> actives = [
       {
         'initial': 'F',
@@ -641,35 +678,44 @@ class HomeScreen extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: actives
                 .map(
-                  (e) => Column(
-                    children: [
-                      CircleAvatar(
-                        radius: 20,
-                        backgroundColor: Color(int.parse(e['color']!)),
-                        child: Text(
-                          e['initial']!,
-                          style: const TextStyle(
-                            fontWeight: FontWeight.bold,
-                            color: Colors.black54,
+                  (e) => GestureDetector(
+                    onTap: () {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(
+                          content: Text('Mengirim pesan ke ${e['name']}...'),
+                        ),
+                      );
+                    },
+                    child: Column(
+                      children: [
+                        CircleAvatar(
+                          radius: 20,
+                          backgroundColor: Color(int.parse(e['color']!)),
+                          child: Text(
+                            e['initial']!,
+                            style: const TextStyle(
+                              fontWeight: FontWeight.bold,
+                              color: Colors.black54,
+                            ),
                           ),
                         ),
-                      ),
-                      const SizedBox(height: 6),
-                      Text(
-                        e['name']!,
-                        style: const TextStyle(
-                          fontSize: 10,
-                          fontWeight: FontWeight.bold,
+                        const SizedBox(height: 6),
+                        Text(
+                          e['name']!,
+                          style: const TextStyle(
+                            fontSize: 10,
+                            fontWeight: FontWeight.bold,
+                          ),
                         ),
-                      ),
-                      Text(
-                        e['phase']!,
-                        style: const TextStyle(
-                          fontSize: 9,
-                          color: Colors.black38,
+                        Text(
+                          e['phase']!,
+                          style: const TextStyle(
+                            fontSize: 9,
+                            color: Colors.black38,
+                          ),
                         ),
-                      ),
-                    ],
+                      ],
+                    ),
                   ),
                 )
                 .toList(),
@@ -679,7 +725,7 @@ class HomeScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildQuickActions() {
+  Widget _buildQuickActions(context) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 20),
       child: GridView.count(
@@ -694,59 +740,91 @@ class HomeScreen extends StatelessWidget {
             'Cari Study Partner',
             'Temukan mahasiswa se-fase & se-jalur studimu',
             Icons.search,
+            onTap: () {
+              ScaffoldMessenger.of(context).showSnackBar(
+                const SnackBar(content: Text('Membuka pencarian partner...')),
+              );
+            },
           ),
           _buildActionCard(
             'Gabung Komunitas',
             'Ruang diskusi berdasarkan topik & tujuan',
             Icons.people_outline,
+            onTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) =>
+                      const CommunityScreen(title: 'Komunitas'),
+                ),
+              );
+            },
           ),
           _buildActionCard(
             'Update Tag Minat',
             'Atur ulang topik untuk match yang lebih tepat',
             Icons.local_offer_outlined,
+            onTap: () {
+              ScaffoldMessenger.of(context).showSnackBar(
+                const SnackBar(content: Text('Membuka pengaturan minat...')),
+              );
+            },
           ),
           _buildActionCard(
             'Ajak Temanmu',
             'Undang via email kampus .ac.id',
             Icons.mail_outline,
+            onTap: () {
+              ScaffoldMessenger.of(context).showSnackBar(
+                const SnackBar(content: Text('Membuka fitur undang teman...')),
+              );
+            },
           ),
         ],
       ),
     );
   }
 
-  Widget _buildActionCard(String title, String subtitle, IconData icon) {
-    return Container(
-      padding: const EdgeInsets.all(12),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(16),
-        boxShadow: [
-          BoxShadow(color: Colors.black.withOpacity(0.02), blurRadius: 10),
-        ],
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Icon(icon, size: 20, color: Colors.black54),
-          const Spacer(),
-          Text(
-            title,
-            style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 11),
-          ),
-          const SizedBox(height: 2),
-          Text(
-            subtitle,
-            style: const TextStyle(fontSize: 8, color: Colors.black38),
-            maxLines: 2,
-            overflow: TextOverflow.ellipsis,
-          ),
-        ],
+  Widget _buildActionCard(
+    String title,
+    String subtitle,
+    IconData icon, {
+    VoidCallback? onTap,
+  }) {
+    return GestureDetector(
+      onTap: onTap,
+      child: Container(
+        padding: const EdgeInsets.all(12),
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(16),
+          boxShadow: [
+            BoxShadow(color: Colors.black.withOpacity(0.02), blurRadius: 10),
+          ],
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Icon(icon, size: 20, color: Colors.black54),
+            const Spacer(),
+            Text(
+              title,
+              style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 11),
+            ),
+            const SizedBox(height: 2),
+            Text(
+              subtitle,
+              style: const TextStyle(fontSize: 8, color: Colors.black38),
+              maxLines: 2,
+              overflow: TextOverflow.ellipsis,
+            ),
+          ],
+        ),
       ),
     );
   }
 
-  Widget _buildCommunitiesList() {
+  Widget _buildCommunitiesList(context) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 20),
       child: Column(
@@ -757,6 +835,15 @@ class HomeScreen extends StatelessWidget {
             '124 anggota',
             'Terverifikasi',
             Icons.computer,
+            onTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) =>
+                      const CommunityScreen(title: 'ML Study Group'),
+                ),
+              );
+            },
           ),
           const SizedBox(height: 12),
           _buildCommunityCard(
@@ -765,6 +852,15 @@ class HomeScreen extends StatelessWidget {
             '59 anggota',
             'Terverifikasi',
             Icons.edit_document,
+            onTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) =>
+                      const CommunityScreen(title: 'Skripsi Support'),
+                ),
+              );
+            },
           ),
         ],
       ),
@@ -776,93 +872,103 @@ class HomeScreen extends StatelessWidget {
     String desc,
     String members,
     String badge,
-    IconData icon,
-  ) {
-    return Container(
-      padding: const EdgeInsets.all(16),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(16),
-        boxShadow: [
-          BoxShadow(color: Colors.black.withOpacity(0.02), blurRadius: 10),
-        ],
-      ),
-      child: Row(
-        children: [
-          Container(
-            padding: const EdgeInsets.all(10),
-            decoration: BoxDecoration(
-              color: brandSecondary,
-              borderRadius: BorderRadius.circular(12),
+    IconData icon, {
+    VoidCallback? onTap,
+  }) {
+    return GestureDetector(
+      onTap: onTap,
+      child: Container(
+        padding: const EdgeInsets.all(16),
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(16),
+          boxShadow: [
+            BoxShadow(color: Colors.black.withOpacity(0.02), blurRadius: 10),
+          ],
+        ),
+        child: Row(
+          children: [
+            Container(
+              padding: const EdgeInsets.all(10),
+              decoration: BoxDecoration(
+                color: brandSecondary,
+                borderRadius: BorderRadius.circular(12),
+              ),
+              child: Icon(icon, color: brandColor),
             ),
-            child: Icon(icon, color: brandColor),
-          ),
-          const SizedBox(width: 12),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  title,
-                  style: const TextStyle(
-                    fontWeight: FontWeight.bold,
-                    fontSize: 12,
+            const SizedBox(width: 12),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    title,
+                    style: const TextStyle(
+                      fontWeight: FontWeight.bold,
+                      fontSize: 12,
+                    ),
                   ),
-                ),
-                const SizedBox(height: 4),
-                Text(
-                  desc,
-                  style: const TextStyle(fontSize: 10, color: Colors.black54),
-                ),
-                const SizedBox(height: 8),
-                Row(
-                  children: [
-                    const Icon(Icons.people, size: 12, color: Colors.black38),
-                    const SizedBox(width: 4),
-                    Text(
-                      members,
-                      style: const TextStyle(
-                        fontSize: 10,
-                        color: Colors.black54,
+                  const SizedBox(height: 4),
+                  Text(
+                    desc,
+                    style: const TextStyle(fontSize: 10, color: Colors.black54),
+                  ),
+                  const SizedBox(height: 8),
+                  Row(
+                    children: [
+                      const Icon(Icons.people, size: 12, color: Colors.black38),
+                      const SizedBox(width: 4),
+                      Text(
+                        members,
+                        style: const TextStyle(
+                          fontSize: 10,
+                          color: Colors.black54,
+                        ),
                       ),
-                    ),
-                    const SizedBox(width: 12),
-                    const Icon(
-                      Icons.check_circle,
-                      size: 12,
-                      color: Colors.green,
-                    ),
-                    const SizedBox(width: 4),
-                    Text(
-                      badge,
-                      style: const TextStyle(fontSize: 10, color: Colors.green),
-                    ),
-                  ],
+                      const SizedBox(width: 12),
+                      const Icon(
+                        Icons.check_circle,
+                        size: 12,
+                        color: Colors.green,
+                      ),
+                      const SizedBox(width: 4),
+                      Text(
+                        badge,
+                        style: const TextStyle(
+                          fontSize: 10,
+                          color: Colors.green,
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+            ),
+            const SizedBox(width: 8),
+            ElevatedButton(
+              onPressed: () {},
+              style: ElevatedButton.styleFrom(
+                backgroundColor: brandColor,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(20),
                 ),
-              ],
-            ),
-          ),
-          const SizedBox(width: 8),
-          ElevatedButton(
-            onPressed: () {},
-            style: ElevatedButton.styleFrom(
-              backgroundColor: brandColor,
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(20),
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 16,
+                  vertical: 8,
+                ),
+                minimumSize: Size.zero,
               ),
-              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-              minimumSize: Size.zero,
-            ),
-            child: const Text(
-              'Gabung',
-              style: TextStyle(
-                fontSize: 10,
-                fontWeight: FontWeight.bold,
-                color: Colors.white,
+              child: const Text(
+                'Gabung',
+                style: TextStyle(
+                  fontSize: 10,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.white,
+                ),
               ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }

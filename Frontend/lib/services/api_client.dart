@@ -70,4 +70,20 @@ class ApiClient {
       return {'message': 'Gagal terhubung ke server: $e'};
     }
   }
+
+  // Fungsi Lupa Password
+  static Future<Map<String, dynamic>> forgotPassword(String email) async {
+    try {
+      final response = await http.post(
+        Uri.parse('$baseUrl/auth/forgot-password'),
+        headers: {'Content-Type': 'application/json'},
+        body: jsonEncode({
+          'email': email,
+        }),
+      );
+      return jsonDecode(response.body);
+    } catch (e) {
+      return {'message': 'Gagal terhubung ke server: $e'};
+    }
+  }
 }

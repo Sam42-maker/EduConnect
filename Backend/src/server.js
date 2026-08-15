@@ -10,8 +10,9 @@ const pool = require("./config/db");
 const redisClient = require("./config/redis");
 const rabbitMq = require("./config/rabbitmq");
 
-// Routes
 const authRoutes = require("./routes/authRoutes");
+const communityRoutes = require("./routes/communityRoutes");
+const chatRoutes = require("./routes/chatRoutes");
 // const matchRoutes = require("./routes/matchRoutes"); // To be rewritten in raw SQL later
 
 const app = express();
@@ -32,8 +33,9 @@ app.use(cors());
 // Serve assets luring untuk avatar / unggahan (Lumiora style)
 app.use("/assets", express.static(path.join(__dirname, "../assets")));
 
-// Registrasi Routes
 app.use("/api/auth", authRoutes);
+app.use("/api/communities", communityRoutes);
+app.use("/api/chats", chatRoutes);
 // app.use("/api/matches", matchRoutes);
 
 io.on("connection", (socket) => {
@@ -52,19 +54,30 @@ io.on("connection", (socket) => {
   });
 
   // Real-time messaging
-  socket.on("send_message", async (message) => {
+  socket.on("send_message", async (data) => {
     try {
-      // Lempar beban penyimpanan pesan ke RabbitMQ (Battleship style)
-      rabbitMq.publishMessage("chat_messages_queue", message);
+      const { senderId, receiverId, message } = data;
+      
+      // Save private message to database
+      await pool.execute(
+        "INSERT INTO chats (sender_id, receiver_id, message) VALUES (?, ?, ?)",
+        [senderId || 1, receiverId, message]
+      );
 
-      // Ambil socket id penerima dari Redis
-      const recipientSocketId = await redisClient.get(`user:${message.receiverId}:socket`);
+      // Lempar beban penyimpanan pesan ke RabbitMQ (Battleship style) - Optional
+      // rabbitMq.publishMessage("chat_messages_queue", data);
+
+      const recipientSocketId = await redisClient.get(`user:${receiverId}:socket`);
       if (recipientSocketId) {
-        io.to(recipientSocketId).emit("receive_message", message);
-        console.log(`💬 Message forwarded in real-time from ${message.senderId} to ${message.receiverId}`);
+        io.to(recipientSocketId).emit("receive_message", {
+          senderId: senderId || 1,
+          message,
+          timestamp: new Date().toISOString()
+        });
+        console.log(`💬 Message forwarded in real-time from ${senderId} to ${receiverId}`);
       }
     } catch (e) {
-      console.error("Error processing send_message:", e);
+      console.error("Error handling private message:", e);
     }
   });
 
@@ -77,6 +90,37 @@ io.on("connection", (socket) => {
       }
     } catch (e) {}
   });
+
+  // --- COMMUNITY SOCKET.IO LOGIC ---
+  socket.on("join_channel", (channelId) => {
+    socket.join(`channel_${channelId}`);
+    console.log(`Socket ${socket.id} joined channel_${channelId}`);
+  });
+
+  socket.on("send_channel_message", async (data) => {
+    try {
+      const { channelId, senderId, senderName, text } = data;
+      
+      // Save to database directly for now (or queue it)
+      await pool.execute(
+        "INSERT INTO community_messages (channel_id, sender_id, sender_name, text) VALUES (?, ?, ?, ?)",
+        [channelId, senderId || 1, senderName || "User", text]
+      );
+
+      // Broadcast to room
+      const msgObj = {
+        sender: senderName || "User",
+        text,
+        time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+        channelId
+      };
+      
+      io.to(`channel_${channelId}`).emit("receive_channel_message", msgObj);
+    } catch (e) {
+      console.error("Error sending channel message:", e);
+    }
+  });
+  // ---------------------------------
 
   // Disconnect handler
   socket.on("disconnect", async () => {

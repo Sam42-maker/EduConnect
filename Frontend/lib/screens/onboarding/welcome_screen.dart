@@ -35,7 +35,7 @@ class WelcomeScreen extends StatelessWidget {
                       decoration: BoxDecoration(color: brandSecondary),
                       child: Center(
                         child: Image.asset(
-                          'assets/images/Connie_app.png',
+                          'lib/models/Connie_app.png',
                           width: 56,
                           height: 56,
                         ),
@@ -90,7 +90,7 @@ class WelcomeScreen extends StatelessWidget {
 
                         // Mascot Utama
                         Image.asset(
-                          'assets/images/Connie_app.png',
+                          'lib/models/Connie_app.png',
                           width: 160,
                           height: 160,
                         ),
@@ -201,13 +201,17 @@ class WelcomeScreen extends StatelessWidget {
                             elevation: 0,
                           ),
                           child: const Row(
+                            mainAxisSize: MainAxisSize.min,
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
-                              Text(
-                                'Mulai Daftar',
-                                style: TextStyle(
-                                  fontSize: 18,
-                                  fontWeight: FontWeight.bold,
+                              Flexible(
+                                child: Text(
+                                  'Mulai Daftar',
+                                  style: TextStyle(
+                                    fontSize: 18,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                  overflow: TextOverflow.ellipsis,
                                 ),
                               ),
                               SizedBox(width: 8),

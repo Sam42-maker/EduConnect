@@ -12,4 +12,9 @@ router.post('/register', authController.register);
 // @access  Public
 router.post('/login', authController.login);
 
+// @route   POST /api/auth/forgot-password
+// @desc    Reset password with 8 random characters
+// @access  Public
+router.post('/forgot-password', authController.forgotPassword);
+
 module.exports = router;

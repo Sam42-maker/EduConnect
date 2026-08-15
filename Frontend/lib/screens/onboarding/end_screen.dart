@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import '../../widgets/custom_button.dart';
 import '../../widgets/progress_step_indicator.dart';
 
-import '../main_navigation_screen.dart';
+import '../home/main_navigation_screen.dart';
 
 class EndScreen extends StatelessWidget {
   final String userName;
