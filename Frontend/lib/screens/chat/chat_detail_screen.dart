@@ -36,7 +36,7 @@ class _ChatDetailScreenState extends State<ChatDetailScreen> {
 
   Future<void> _fetchMessages() async {
     try {
-      final res = await http.get(Uri.parse('http://localhost:5000/api/chats/${widget.partnerId}?userId=$currentUserId'));
+      final res = await http.get(Uri.parse('http://34.128.96.164:5000/api/chats/${widget.partnerId}?userId=$currentUserId'));
       if (res.statusCode == 200) {
         final data = json.decode(res.body);
         if (data['success']) {
@@ -54,7 +54,7 @@ class _ChatDetailScreenState extends State<ChatDetailScreen> {
   }
 
   void _initSocket() {
-    socket = IO.io('http://localhost:5000', <String, dynamic>{
+    socket = IO.io('http://34.128.96.164:5000', <String, dynamic>{
       'transports': ['websocket'],
       'autoConnect': false,
     });

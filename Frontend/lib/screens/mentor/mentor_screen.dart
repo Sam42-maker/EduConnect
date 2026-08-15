@@ -1,5 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
+import 'dart:convert';
+import 'package:socket_io_client/socket_io_client.dart' as IO;
 import 'mentor_detail_screen.dart';
+import '../../services/api_client.dart';
 
 class MentorScreen extends StatefulWidget {
   const MentorScreen({super.key});
@@ -13,70 +17,145 @@ class _MentorScreenState extends State<MentorScreen> {
   final Color lightGreen = const Color(0xFFE8F2E7);
   final Color darkGreen = const Color(0xFF1F4330);
   
-  final List<Map<String, dynamic>> dummyMentors = [
-    {
-      'id': '1',
-      'name': 'Frank Castle',
-      'isVerified': true,
-      'badges': ['Skripsi', 'Project'],
-      'field': 'Sistem Informasi',
-      'expertise': ['Machine Learning', 'Deep Learning', 'Python'],
-      'description': 'Membantu menyusun draft proposal skripsi dan memberikan ulasan mingguan terkait machine learning.',
-      'rating': 4.7,
-      'reviews': 21,
-      'price': 250000,
-    },
-    {
-      'id': '2',
-      'name': 'Shandius Afrianus',
-      'isVerified': true,
-      'badges': ['Project', 'Course'],
-      'field': 'Teknik Informatika',
-      'expertise': ['UI/UX', 'Figma', 'Flutter'],
-      'description': 'Berpengalaman dalam desain UI/UX dan pengembangan aplikasi mobile. Siap membantu project Anda.',
-      'rating': 4.9,
-      'reviews': 45,
-      'price': 150000,
-    },
-    {
-      'id': '3',
-      'name': 'Gabrielus Cruzalus',
-      'isVerified': true,
-      'badges': ['Skripsi', 'Course'],
-      'field': 'Data Science',
-      'expertise': ['Data Analysis', 'SQL', 'Tableau'],
-      'description': 'Spesialis dalam analisis data dan visualisasi. Membantu dari tahap crawling data hingga dashboard.',
-      'rating': 4.8,
-      'reviews': 32,
-      'price': 200000,
-    },
-  ];
+  List<Map<String, dynamic>> mentors = [];
+  bool isLoading = true;
+  String? role;
+  String? userId;
+  late IO.Socket socket;
+
+  @override
+  void initState() {
+    super.initState();
+    _checkRole();
+    _fetchMentors();
+    _initSocket();
+  }
+
+  Future<void> _checkRole() async {
+    final r = await ApiClient.getUserRole();
+    final uid = await ApiClient.getUserId();
+    setState(() {
+      role = r;
+      userId = uid;
+    });
+  }
+
+  void _initSocket() {
+    socket = IO.io('http://34.128.96.164:5000', <String, dynamic>{
+      'transports': ['websocket'],
+      'autoConnect': true,
+    });
+
+    socket.onConnect((_) {
+      print('MentorScreen connected to socket');
+    });
+
+    socket.on('new_mentor_added', (data) {
+      if (mounted) {
+        setState(() {
+          // Check if already in list to avoid duplicates
+          final existsIndex = mentors.indexWhere((m) => m['id'].toString() == data['id'].toString());
+          if (existsIndex == -1) {
+            mentors.insert(0, Map<String, dynamic>.from(data));
+          } else {
+            mentors[existsIndex] = Map<String, dynamic>.from(data);
+          }
+        });
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Mentor baru bergabung!')),
+        );
+      }
+    });
+  }
+
+  @override
+  void dispose() {
+    socket.dispose();
+    super.dispose();
+  }
+
+  Future<void> _fetchMentors() async {
+    try {
+      final response = await http.get(Uri.parse('http://34.128.96.164:5000/api/mentors'));
+      if (response.statusCode == 200) {
+        final List<dynamic> data = json.decode(response.body);
+        setState(() {
+          mentors = data.map((e) => e as Map<String, dynamic>).toList();
+          isLoading = false;
+        });
+      } else {
+        throw Exception('Gagal memuat mentor');
+      }
+    } catch (e) {
+      print('Error fetching mentors: $e');
+      setState(() {
+        isLoading = false;
+      });
+    }
+  }
+
+  Future<void> _promoteAsMentor() async {
+    if (userId == null) return;
+    
+    // One click promotion
+    final res = await http.post(
+      Uri.parse('http://34.128.96.164:5000/api/mentors/promote'),
+      headers: {'Content-Type': 'application/json'},
+      body: jsonEncode({
+        'userId': userId,
+        'price': 150000,
+        'expertise': ['Data Science', 'Python', 'Machine Learning'],
+        'description': 'Hai, saya praktisi Data Science dengan pengalaman 3 tahun...',
+      })
+    );
+
+    if (res.statusCode == 200) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Jasa berhasil dipromosikan!')),
+      );
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Gagal mempromosikan jasa')),
+      );
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: const Color(0xFFF8F9FA),
       appBar: AppBar(
-        backgroundColor: Colors.white,
+        backgroundColor: brandGreen,
         elevation: 0,
         automaticallyImplyLeading: false,
-        title: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
+        title: Row(
           children: [
-            Text(
-              'Mentor',
-              style: TextStyle(
-                color: brandGreen,
-                fontWeight: FontWeight.bold,
-                fontSize: 22,
-              ),
+            Image.asset(
+              'assets/images/Connie_app.png',
+              width: 32,
+              height: 32,
+              fit: BoxFit.contain,
             ),
-            const Text(
-              'Ruang kolaborasi berbasis topik & jurusan',
-              style: TextStyle(
-                color: Colors.grey,
-                fontSize: 12,
-              ),
+            const SizedBox(width: 12),
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const Text(
+                  'Mentor',
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontWeight: FontWeight.bold,
+                    fontSize: 22,
+                  ),
+                ),
+                const Text(
+                  'Ruang kolaborasi berbasis topik & jurusan',
+                  style: TextStyle(
+                    color: Colors.white70,
+                    fontSize: 12,
+                  ),
+                ),
+              ],
             ),
           ],
         ),
@@ -103,16 +182,39 @@ class _MentorScreenState extends State<MentorScreen> {
             ),
           ),
           
+          if (role == 'Mentor')
+            Container(
+              color: Colors.white,
+              padding: const EdgeInsets.fromLTRB(20, 0, 20, 10),
+              width: double.infinity,
+              child: ElevatedButton.icon(
+                onPressed: _promoteAsMentor,
+                icon: const Icon(Icons.campaign),
+                label: const Text('Promosikan Jasa Bimbingan'),
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: const Color(0xFFFACC15),
+                  foregroundColor: Colors.black87,
+                  padding: const EdgeInsets.symmetric(vertical: 12),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                  elevation: 0,
+                ),
+              ),
+            ),
+
           // Mentor List
           Expanded(
-            child: ListView.builder(
-              padding: const EdgeInsets.all(16),
-              itemCount: dummyMentors.length,
-              itemBuilder: (context, index) {
-                final mentor = dummyMentors[index];
-                return _buildMentorCard(mentor);
-              },
-            ),
+            child: isLoading
+                ? Center(child: CircularProgressIndicator(color: brandGreen))
+                : ListView.builder(
+                    padding: const EdgeInsets.all(16),
+                    itemCount: mentors.length,
+                    itemBuilder: (context, index) {
+                      final mentor = mentors[index];
+                      return _buildMentorCard(mentor);
+                    },
+                  ),
           ),
         ],
       ),
@@ -199,7 +301,7 @@ class _MentorScreenState extends State<MentorScreen> {
                       Wrap(
                         spacing: 6,
                         runSpacing: 4,
-                        children: (mentor['badges'] as List<String>).map((badge) {
+                        children: (mentor['badges'] as List<dynamic>).map((badge) {
                           return Container(
                             padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
                             decoration: BoxDecoration(
@@ -208,7 +310,7 @@ class _MentorScreenState extends State<MentorScreen> {
                               border: Border.all(color: Colors.grey.shade300),
                             ),
                             child: Text(
-                              badge,
+                              badge.toString(),
                               style: const TextStyle(fontSize: 10, color: Colors.black54),
                             ),
                           );
@@ -225,7 +327,7 @@ class _MentorScreenState extends State<MentorScreen> {
             Wrap(
               spacing: 6,
               runSpacing: 6,
-              children: (mentor['expertise'] as List<String>).map((skill) {
+              children: (mentor['expertise'] as List<dynamic>).map((skill) {
                 return Container(
                   padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
                   decoration: BoxDecoration(
@@ -233,7 +335,7 @@ class _MentorScreenState extends State<MentorScreen> {
                     borderRadius: BorderRadius.circular(20),
                   ),
                   child: Text(
-                    skill,
+                    skill.toString(),
                     style: TextStyle(
                       fontSize: 11,
                       color: brandGreen,

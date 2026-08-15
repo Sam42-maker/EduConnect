@@ -4,11 +4,17 @@ import '../../widgets/custom_tag_chip.dart';
 import '../../widgets/progress_step_indicator.dart';
 import 'end_screen.dart'; // Sudah di-uncomment di Fase 5
 
+import '../../widgets/custom_textfield.dart';
+
 class MinatScreen extends StatefulWidget {
   final String userName;
+  final String role;
 
-  const MinatScreen({Key? key, this.userName = 'Anindya Putri'})
-    : super(key: key);
+  const MinatScreen({
+    Key? key,
+    this.userName = 'Anindya Putri',
+    this.role = 'Student',
+  }) : super(key: key);
 
   @override
   State<MinatScreen> createState() => _MinatScreenState();
@@ -116,7 +122,7 @@ class _MinatScreenState extends State<MinatScreen> {
                       'EduConnect',
                       style: TextStyle(
                         color: Colors.white,
-                        fontSize: 20,
+                        fontSize: 26,
                         fontWeight: FontWeight.bold,
                       ),
                     ),
@@ -174,68 +180,10 @@ class _MinatScreenState extends State<MinatScreen> {
                     ),
 
                     const SizedBox(height: 32),
-                    const Text(
-                      'Preferensi Waktumu',
-                      style: TextStyle(
-                        fontSize: 20,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.black87,
-                      ),
-                    ),
-                    const SizedBox(height: 8),
-                    const Text(
-                      'Kapan kamu biasanya bisa belajar bersama?',
-                      style: TextStyle(fontSize: 14, color: Colors.black54),
-                    ),
-                    const SizedBox(height: 16),
 
-                    // Daftar Checkbox Custom
-                    ..._waktuBelajar.keys.map((waktu) {
-                      return GestureDetector(
-                        onTap: () {
-                          setState(() {
-                            _waktuBelajar[waktu] = !_waktuBelajar[waktu]!;
-                          });
-                        },
-                        child: Container(
-                          margin: const EdgeInsets.only(bottom: 12),
-                          padding: const EdgeInsets.symmetric(
-                            horizontal: 16,
-                            vertical: 16,
-                          ),
-                          decoration: BoxDecoration(
-                            color: Colors.white,
-                            border: Border.all(
-                              color: _waktuBelajar[waktu]!
-                                  ? const Color(0xFF2B5C43)
-                                  : Colors.grey.shade300,
-                              width: 1.5,
-                            ),
-                            borderRadius: BorderRadius.circular(12),
-                          ),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Text(
-                                waktu,
-                                style: const TextStyle(
-                                  fontSize: 16,
-                                  color: Colors.black87,
-                                ),
-                              ),
-                              Icon(
-                                _waktuBelajar[waktu]!
-                                    ? Icons.check_box
-                                    : Icons.check_box_outline_blank,
-                                color: _waktuBelajar[waktu]!
-                                    ? const Color(0xFF2B5C43)
-                                    : Colors.grey.shade400,
-                              ),
-                            ],
-                          ),
-                        ),
-                      );
-                    }).toList(),
+                    widget.role == 'Student'
+                        ? _buildStudentUI()
+                        : _buildMentorUI(),
 
                     const SizedBox(height: 40),
 
@@ -259,6 +207,106 @@ class _MinatScreenState extends State<MinatScreen> {
           ),
         ],
       ),
+    );
+  }
+
+  Widget _buildStudentUI() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        const Text(
+          'Preferensi Waktumu',
+          style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: Colors.black87),
+        ),
+        const SizedBox(height: 8),
+        const Text(
+          'Kapan kamu biasanya bisa belajar bersama?',
+          style: TextStyle(fontSize: 14, color: Colors.black54),
+        ),
+        const SizedBox(height: 16),
+        ..._waktuBelajar.keys.map((waktu) {
+          return GestureDetector(
+            onTap: () {
+              setState(() {
+                _waktuBelajar[waktu] = !_waktuBelajar[waktu]!;
+              });
+            },
+            child: Container(
+              margin: const EdgeInsets.only(bottom: 12),
+              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
+              decoration: BoxDecoration(
+                color: Colors.white,
+                border: Border.all(
+                  color: _waktuBelajar[waktu]! ? const Color(0xFF2B5C43) : Colors.grey.shade300,
+                  width: 1.5,
+                ),
+                borderRadius: BorderRadius.circular(12),
+              ),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(waktu, style: const TextStyle(fontSize: 16, color: Colors.black87)),
+                  Icon(
+                    _waktuBelajar[waktu]! ? Icons.check_box : Icons.check_box_outline_blank,
+                    color: _waktuBelajar[waktu]! ? const Color(0xFF2B5C43) : Colors.grey.shade400,
+                  ),
+                ],
+              ),
+            ),
+          );
+        }).toList(),
+      ],
+    );
+  }
+
+  Widget _buildMentorUI() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        const Text(
+          'Jelaskan Dirimu',
+          style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: Colors.black87),
+        ),
+        const SizedBox(height: 8),
+        const Text(
+          'Tulis bio singkat untuk mempromosikan keahlianmu.',
+          style: TextStyle(fontSize: 14, color: Colors.black54),
+        ),
+        const SizedBox(height: 16),
+        TextField(
+          maxLines: 4,
+          decoration: InputDecoration(
+            hintText: 'Cth: Hai, saya praktisi Data Science dengan pengalaman 3 tahun...',
+            border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
+            focusedBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(12),
+              borderSide: const BorderSide(color: Color(0xFF2B5C43), width: 2),
+            ),
+          ),
+        ),
+        const SizedBox(height: 32),
+
+        const Text(
+          'Tarif Jasa & Waktu',
+          style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: Colors.black87),
+        ),
+        const SizedBox(height: 8),
+        const Text(
+          'Tentukan harga dan jam operasional bimbinganmu.',
+          style: TextStyle(fontSize: 14, color: Colors.black54),
+        ),
+        const SizedBox(height: 16),
+        const CustomTextField(
+          label: 'Harga per Sesi (Rp)',
+          hintText: 'Cth: 150000',
+          keyboardType: TextInputType.number,
+        ),
+        const SizedBox(height: 16),
+        const CustomTextField(
+          label: 'Waktu Ketersediaan',
+          hintText: 'Cth: Senin - Jumat (19:00 - 21:00)',
+        ),
+      ],
     );
   }
 }

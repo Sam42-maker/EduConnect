@@ -211,7 +211,7 @@ class _AuthScreenState extends State<AuthScreen> {
                       'EduConnect',
                       style: TextStyle(
                         color: Colors.white,
-                        fontSize: 20,
+                        fontSize: 26,
                         fontWeight: FontWeight.bold,
                       ),
                     ),
@@ -388,6 +388,7 @@ class _AuthScreenState extends State<AuthScreen> {
                                     MaterialPageRoute(
                                       builder: (context) => AkademikScreen(
                                         userName: displayName,
+                                        role: widget.role,
                                       ),
                                     ),
                                   );

@@ -107,7 +107,7 @@ class _SplashScreenState extends State<SplashScreen>
                           'EduConnect',
                           style: TextStyle(
                             color: Colors.white,
-                            fontSize: 20,
+                            fontSize: 26,
                             fontWeight: FontWeight.bold,
                           ),
                         ),

@@ -850,9 +850,20 @@ class _DiscoverScreenState extends State<DiscoverScreen> {
       appBar: AppBar(
         backgroundColor: const Color(0xFF2B5C43),
         elevation: 0,
-        title: const Text(
-          'Discover',
-          style: TextStyle(color: Colors.white, fontWeight: FontWeight.w900, fontSize: 22),
+        title: Row(
+          children: [
+            Image.asset(
+              'assets/images/Connie_app.png',
+              width: 32,
+              height: 32,
+              fit: BoxFit.contain,
+            ),
+            const SizedBox(width: 12),
+            const Text(
+              'Discover',
+              style: TextStyle(color: Colors.white, fontWeight: FontWeight.w900, fontSize: 22),
+            ),
+          ],
         ),
         automaticallyImplyLeading: false,
         iconTheme: const IconThemeData(color: Colors.white),

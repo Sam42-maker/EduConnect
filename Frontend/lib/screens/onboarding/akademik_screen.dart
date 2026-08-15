@@ -7,9 +7,13 @@ import 'minat_screen.dart';
 
 class AkademikScreen extends StatefulWidget {
   final String userName;
+  final String role;
 
-  const AkademikScreen({Key? key, this.userName = 'Anindya Putri'})
-    : super(key: key);
+  const AkademikScreen({
+    Key? key,
+    this.userName = 'Anindya Putri',
+    this.role = 'Student',
+  }) : super(key: key);
 
   @override
   State<AkademikScreen> createState() => _AkademikScreenState();
@@ -74,7 +78,7 @@ class _AkademikScreenState extends State<AkademikScreen> {
                       'EduConnect',
                       style: TextStyle(
                         color: Colors.white,
-                        fontSize: 20,
+                        fontSize: 26,
                         fontWeight: FontWeight.bold,
                       ),
                     ),
@@ -108,63 +112,10 @@ class _AkademikScreenState extends State<AkademikScreen> {
                     ),
                     const SizedBox(height: 32),
 
-                    const CustomTextField(
-                      label: 'Kampus',
-                      hintText: 'Kampus mana?',
-                    ),
-                    const SizedBox(height: 16),
-                    const CustomTextField(
-                      label: 'Jurusan',
-                      hintText: 'Jurusan apa?',
-                    ),
-                    const SizedBox(height: 16),
-                    const CustomTextField(
-                      label: 'Semester',
-                      hintText: 'Semester?',
-                      keyboardType: TextInputType.number,
-                    ),
-                    const SizedBox(height: 24),
-
-                    const Text(
-                      'Fase Studi',
-                      style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                        fontSize: 14,
-                      ),
-                    ),
-                    const SizedBox(height: 12),
-                    Wrap(
-                      spacing: 10,
-                      runSpacing: 10,
-                      children: _faseStudi.map((fase) {
-                        return CustomTagChip(
-                          label: fase,
-                          isSelected: _selectedFase == fase,
-                          onTap: () => setState(() => _selectedFase = fase),
-                        );
-                      }).toList(),
-                    ),
-                    const SizedBox(height: 24),
-
-                    const Text(
-                      'Tujuan Kolaborasi',
-                      style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                        fontSize: 14,
-                      ),
-                    ),
-                    const SizedBox(height: 12),
-                    Wrap(
-                      spacing: 10,
-                      runSpacing: 10,
-                      children: _tujuanKolaborasi.map((tujuan) {
-                        return CustomTagChip(
-                          label: tujuan,
-                          isSelected: _selectedTujuan == tujuan,
-                          onTap: () => setState(() => _selectedTujuan = tujuan),
-                        );
-                      }).toList(),
-                    ),
+                    widget.role == 'Student' 
+                      ? _buildStudentUI()
+                      : _buildMentorUI(),
+                      
                     const SizedBox(height: 40),
 
                     CustomButton(
@@ -173,8 +124,10 @@ class _AkademikScreenState extends State<AkademikScreen> {
                         Navigator.push(
                           context,
                           MaterialPageRoute(
-                            builder: (context) =>
-                                MinatScreen(userName: widget.userName),
+                            builder: (context) => MinatScreen(
+                              userName: widget.userName,
+                              role: widget.role,
+                            ),
                           ),
                         );
                       },
@@ -185,6 +138,150 @@ class _AkademikScreenState extends State<AkademikScreen> {
             ),
           ),
         ],
+      ),
+    );
+  }
+  Widget _buildStudentUI() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        const CustomTextField(
+          label: 'Kampus',
+          hintText: 'Kampus mana?',
+        ),
+        const SizedBox(height: 16),
+        const CustomTextField(
+          label: 'Jurusan',
+          hintText: 'Jurusan apa?',
+        ),
+        const SizedBox(height: 16),
+        const CustomTextField(
+          label: 'Semester',
+          hintText: 'Semester?',
+          keyboardType: TextInputType.number,
+        ),
+        const SizedBox(height: 24),
+
+        const Text(
+          'Fase Studi',
+          style: TextStyle(fontWeight: FontWeight.bold, fontSize: 14),
+        ),
+        const SizedBox(height: 12),
+        Wrap(
+          spacing: 10,
+          runSpacing: 10,
+          children: _faseStudi.map((fase) {
+            return CustomTagChip(
+              label: fase,
+              isSelected: _selectedFase == fase,
+              onTap: () => setState(() => _selectedFase = fase),
+            );
+          }).toList(),
+        ),
+        const SizedBox(height: 24),
+
+        const Text(
+          'Tujuan Kolaborasi',
+          style: TextStyle(fontWeight: FontWeight.bold, fontSize: 14),
+        ),
+        const SizedBox(height: 12),
+        Wrap(
+          spacing: 10,
+          runSpacing: 10,
+          children: _tujuanKolaborasi.map((tujuan) {
+            return CustomTagChip(
+              label: tujuan,
+              isSelected: _selectedTujuan == tujuan,
+              onTap: () => setState(() => _selectedTujuan = tujuan),
+            );
+          }).toList(),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildMentorUI() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        const Text(
+          'Pendidikan Terakhir',
+          style: TextStyle(fontWeight: FontWeight.bold, fontSize: 14),
+        ),
+        const SizedBox(height: 8),
+        Container(
+          padding: const EdgeInsets.symmetric(horizontal: 16),
+          decoration: BoxDecoration(
+            border: Border.all(color: Colors.grey.shade300),
+            borderRadius: BorderRadius.circular(8),
+          ),
+          child: DropdownButtonHideUnderline(
+            child: DropdownButton<String>(
+              isExpanded: true,
+              value: 'Magister (S2)',
+              items: ['Magister (S2)', 'Sarjana (S1)', 'Doktoral (S3)'].map((String value) {
+                return DropdownMenuItem<String>(
+                  value: value,
+                  child: Text(value, style: const TextStyle(fontSize: 14)),
+                );
+              }).toList(),
+              onChanged: (newValue) {}, // Dummy
+            ),
+          ),
+        ),
+        const SizedBox(height: 24),
+
+        // S2 Section
+        const Text('Riwayat Magister (S2)', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
+        const SizedBox(height: 12),
+        const CustomTextField(label: 'Jurusan', hintText: 'Jurusan apa?'),
+        const SizedBox(height: 12),
+        const CustomTextField(label: 'Universitas', hintText: 'Universitas apa?'),
+        const SizedBox(height: 12),
+        _buildUploadDocumentButton(),
+        const SizedBox(height: 24),
+
+        // S1 Section
+        const Text('Riwayat Sarjana (S1)', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
+        const SizedBox(height: 12),
+        const CustomTextField(label: 'Jurusan', hintText: 'Jurusan apa?'),
+        const SizedBox(height: 12),
+        const CustomTextField(label: 'Universitas', hintText: 'Universitas apa?'),
+        const SizedBox(height: 12),
+        _buildUploadDocumentButton(),
+        const SizedBox(height: 24),
+
+        // Jenis Bimbingan
+        const Text(
+          'Jenis Bimbingan',
+          style: TextStyle(fontWeight: FontWeight.bold, fontSize: 14),
+        ),
+        const SizedBox(height: 12),
+        Wrap(
+          spacing: 10,
+          runSpacing: 10,
+          children: ['UTBK/Ujian Mandiri', 'Sempro', 'Skripsi', 'Project'].map((jenis) {
+            return CustomTagChip(
+              label: jenis,
+              isSelected: _selectedFase == jenis,
+              onTap: () => setState(() => _selectedFase = jenis),
+            );
+          }).toList(),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildUploadDocumentButton() {
+    return ElevatedButton.icon(
+      onPressed: () {},
+      icon: const Icon(Icons.add, size: 18),
+      label: const Text('Surat Kelulusan'),
+      style: ElevatedButton.styleFrom(
+        backgroundColor: Colors.grey.shade200,
+        foregroundColor: const Color(0xFF2B5C43),
+        elevation: 0,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
       ),
     );
   }

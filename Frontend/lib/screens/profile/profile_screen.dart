@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
+import '../../services/api_client.dart';
 
 class ProfileScreen extends StatefulWidget {
   const ProfileScreen({super.key});
@@ -13,7 +14,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
   bool _isLoading = true;
   Map<String, dynamic> _profileData = {};
   
-  final String currentUserId = "1"; // Mocked logged-in user
+  String? currentUserId; 
 
   @override
   void initState() {
@@ -23,7 +24,12 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
   Future<void> _fetchProfile() async {
     try {
-      final res = await http.get(Uri.parse('http://localhost:5000/api/profile/$currentUserId'));
+      currentUserId = await ApiClient.getUserId();
+      if (currentUserId == null) {
+        setState(() => _isLoading = false);
+        return;
+      }
+      final res = await http.get(Uri.parse('http://34.128.96.164:5000/api/profile/$currentUserId'));
       if (res.statusCode == 200) {
         final data = json.decode(res.body);
         if (data['success']) {
@@ -31,7 +37,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
             _profileData = data['data'];
             _isLoading = false;
           });
+        } else {
+          setState(() => _isLoading = false);
         }
+      } else {
+        setState(() => _isLoading = false);
       }
     } catch (e) {
       debugPrint('Error fetching profile: $e');
@@ -223,7 +233,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           
                           try {
                             final res = await http.put(
-                              Uri.parse('http://localhost:5000/api/profile/$currentUserId'),
+                              Uri.parse('http://34.128.96.164:5000/api/profile/$currentUserId'),
                               headers: {"Content-Type": "application/json"},
                               body: json.encode(body),
                             );
@@ -267,9 +277,21 @@ class _ProfileScreenState extends State<ProfileScreen> {
     return Scaffold(
       backgroundColor: const Color(0xFFF9F9F9),
       appBar: AppBar(
-        title: const Text('Profil', style: TextStyle(fontWeight: FontWeight.bold)),
-        backgroundColor: Colors.transparent,
+        automaticallyImplyLeading: false,
+        backgroundColor: const Color(0xFF2B5C43),
         elevation: 0,
+        title: Row(
+          children: [
+            Image.asset(
+              'assets/images/Connie_app.png',
+              width: 32,
+              height: 32,
+              fit: BoxFit.contain,
+            ),
+            const SizedBox(width: 12),
+            const Text('Profil', style: TextStyle(fontWeight: FontWeight.bold, color: Colors.white)),
+          ],
+        ),
       ),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(20),
@@ -374,6 +396,85 @@ class _ProfileScreenState extends State<ProfileScreen> {
             ),
             
             const SizedBox(height: 24),
+
+            // Sertifikasi & Lulusan
+            Container(
+              width: double.infinity,
+              padding: const EdgeInsets.all(20),
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(16),
+                border: Border.all(color: Colors.grey.shade200),
+              ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      const Text('Sertifikasi & Lulusan', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+                      IconButton(
+                        icon: const Icon(Icons.add_circle_outline, color: Color(0xFF2B5C43)),
+                        onPressed: () {},
+                        constraints: const BoxConstraints(),
+                        padding: EdgeInsets.zero,
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 16),
+                  _buildAchievementItem(
+                    icon: Icons.workspace_premium,
+                    title: 'Gelar Magister Ilmu Komputer (M.Kom)',
+                    subtitle: 'Universitas Indonesia · 2024',
+                    isVerified: true,
+                  ),
+                ],
+              ),
+            ),
+            
+            const SizedBox(height: 24),
+
+            // Pencapaian (Achievements)
+            Container(
+              width: double.infinity,
+              padding: const EdgeInsets.all(20),
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(16),
+                border: Border.all(color: Colors.grey.shade200),
+              ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      const Text('Pencapaian (Achievements)', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+                      IconButton(
+                        icon: const Icon(Icons.add_circle_outline, color: Color(0xFF2B5C43)),
+                        onPressed: () {},
+                        constraints: const BoxConstraints(),
+                        padding: EdgeInsets.zero,
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 16),
+                  _buildAchievementItem(
+                    icon: Icons.emoji_events,
+                    title: 'Juara 1 Hackathon Nasional',
+                    subtitle: 'Kementerian Kominfo · 2023',
+                  ),
+                  const SizedBox(height: 12),
+                  _buildAchievementItem(
+                    icon: Icons.campaign,
+                    title: 'Speaker: "AI in Education"',
+                    subtitle: 'TechTalk Conference · 2022',
+                  ),
+                ],
+              ),
+            ),
+            
+            const SizedBox(height: 24),
             SizedBox(
               width: double.infinity,
               height: 50,
@@ -410,6 +511,46 @@ class _ProfileScreenState extends State<ProfileScreen> {
         Text(label, style: const TextStyle(color: Colors.grey, fontSize: 12)),
         const SizedBox(height: 4),
         Text(value, style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w500)),
+      ],
+    );
+  }
+
+  Widget _buildAchievementItem({
+    required IconData icon,
+    required String title,
+    required String subtitle,
+    bool isVerified = false,
+  }) {
+    return Row(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Container(
+          padding: const EdgeInsets.all(10),
+          decoration: BoxDecoration(
+            color: const Color(0xFFD7E8D5),
+            borderRadius: BorderRadius.circular(12),
+          ),
+          child: Icon(icon, color: const Color(0xFF2B5C43), size: 24),
+        ),
+        const SizedBox(width: 16),
+        Expanded(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Row(
+                children: [
+                  Expanded(child: Text(title, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 14))),
+                  if (isVerified) ...[
+                    const SizedBox(width: 4),
+                    const Icon(Icons.verified, color: Colors.blue, size: 16),
+                  ]
+                ],
+              ),
+              const SizedBox(height: 4),
+              Text(subtitle, style: const TextStyle(color: Colors.grey, fontSize: 12)),
+            ],
+          ),
+        ),
       ],
     );
   }

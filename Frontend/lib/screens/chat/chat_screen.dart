@@ -23,7 +23,7 @@ class _ChatScreenState extends State<ChatScreen> {
 
   Future<void> _fetchChats() async {
     try {
-      final res = await http.get(Uri.parse('http://localhost:5000/api/chats?userId=$currentUserId'));
+      final res = await http.get(Uri.parse('http://34.128.96.164:5000/api/chats?userId=$currentUserId'));
       if (res.statusCode == 200) {
         final data = json.decode(res.body);
         if (data['success']) {
@@ -65,7 +65,18 @@ class _ChatScreenState extends State<ChatScreen> {
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
-        title: const Text('Pesan', style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold)),
+        title: Row(
+          children: [
+            Image.asset(
+              'assets/images/Connie_app.png',
+              width: 32,
+              height: 32,
+              fit: BoxFit.contain,
+            ),
+            const SizedBox(width: 12),
+            const Text('Pesan', style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold)),
+          ],
+        ),
         backgroundColor: const Color(0xFF2B5C43), // WhatsApp style header
         automaticallyImplyLeading: false,
         elevation: 1,

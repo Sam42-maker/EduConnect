@@ -44,7 +44,7 @@ class _CommunityDetailScreenState extends State<CommunityDetailScreen> {
 
   Future<void> _fetchChannels() async {
     try {
-      final res = await http.get(Uri.parse('http://localhost:5000/api/communities/${widget.communityId}/channels'));
+      final res = await http.get(Uri.parse('http://34.128.96.164:5000/api/communities/${widget.communityId}/channels'));
       if (res.statusCode == 200) {
         final data = json.decode(res.body);
         if (data['success']) {
@@ -70,7 +70,7 @@ class _CommunityDetailScreenState extends State<CommunityDetailScreen> {
 
   Future<void> _fetchMessages(String channelId) async {
     try {
-      final res = await http.get(Uri.parse('http://localhost:5000/api/communities/channels/$channelId/messages'));
+      final res = await http.get(Uri.parse('http://34.128.96.164:5000/api/communities/channels/$channelId/messages'));
       if (res.statusCode == 200) {
         final data = json.decode(res.body);
         setState(() {
@@ -97,7 +97,7 @@ class _CommunityDetailScreenState extends State<CommunityDetailScreen> {
   void _initSocket() {
     try {
       // Connect to Socket.IO server
-      socket = IO.io('http://localhost:5000', <String, dynamic>{
+      socket = IO.io('http://34.128.96.164:5000', <String, dynamic>{
         'transports': ['websocket'],
         'autoConnect': false,
       });
@@ -431,11 +431,26 @@ class _CommunityDetailScreenState extends State<CommunityDetailScreen> {
         backgroundColor: Colors.white,
         elevation: 1,
         shadowColor: Colors.black12,
-        leading: IconButton(
-          icon: const Icon(Icons.menu, color: Colors.black87),
-          onPressed: () {
-            _scaffoldKey.currentState?.openDrawer();
-          },
+        leadingWidth: 80,
+        leading: Row(
+          children: [
+            IconButton(
+              icon: const Icon(Icons.arrow_back, color: Colors.black87),
+              padding: EdgeInsets.zero,
+              constraints: const BoxConstraints(),
+              onPressed: () {
+                Navigator.pop(context);
+              },
+            ),
+            IconButton(
+              icon: const Icon(Icons.menu, color: Colors.black87),
+              padding: EdgeInsets.zero,
+              constraints: const BoxConstraints(),
+              onPressed: () {
+                _scaffoldKey.currentState?.openDrawer();
+              },
+            ),
+          ],
         ),
         title: Column(
           crossAxisAlignment: CrossAxisAlignment.start,

@@ -46,7 +46,7 @@ class WelcomeScreen extends StatelessWidget {
                       'EduConnect',
                       style: TextStyle(
                         color: Colors.white,
-                        fontSize: 20,
+                        fontSize: 26,
                         fontWeight: FontWeight.bold,
                       ),
                     ),

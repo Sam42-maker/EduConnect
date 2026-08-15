@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'dart:async';
+import 'dart:convert';
+import 'package:http/http.dart' as http;
 import '../home/main_navigation_screen.dart';
 
 class MentorPaymentScreen extends StatefulWidget {
@@ -48,8 +50,31 @@ class _MentorPaymentScreenState extends State<MentorPaymentScreen> {
     );
   }
 
-  void _showSuccessModal() {
+  void _showSuccessModal() async {
     Navigator.pop(context); // Close QRIS dialog
+
+    // Simpan ke backend
+    try {
+      final currentUserId = 1; // Dummy current user id (Shandy Developer)
+      final body = {
+        'studentId': currentUserId,
+        'mentorId': int.parse(widget.mentorData['id']),
+        'topic': widget.topic,
+        'scheduleDate': widget.date.toIso8601String().split('T')[0],
+        'scheduleTime': '${widget.time.hour.toString().padLeft(2, '0')}:${widget.time.minute.toString().padLeft(2, '0')}:00',
+        'notes': widget.notes,
+        'paymentMethod': selectedPaymentMethod,
+        'amount': widget.mentorData['price'],
+      };
+
+      await http.post(
+        Uri.parse('http://34.128.96.164:5000/api/mentors/book'),
+        headers: {'Content-Type': 'application/json'},
+        body: json.encode(body),
+      );
+    } catch (e) {
+      print('Gagal menyimpan booking: $e');
+    }
     
     showDialog(
       context: context,

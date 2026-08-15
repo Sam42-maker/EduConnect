@@ -55,7 +55,7 @@ class _RoleScreenState extends State<RoleScreen> {
                       'EduConnect',
                       style: TextStyle(
                         color: Colors.white,
-                        fontSize: 20,
+                        fontSize: 26,
                         fontWeight: FontWeight.bold,
                       ),
                     ),
@@ -81,13 +81,12 @@ class _RoleScreenState extends State<RoleScreen> {
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          Icon(Icons.bolt, color: Colors.black, size: 18),
-                          SizedBox(width: 8),
                           Text(
                             'Choose Role',
                             style: TextStyle(
-                              fontSize: 14,
-                              color: Colors.black38,
+                              fontSize: 18,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.black87,
                             ),
                           ),
                         ],

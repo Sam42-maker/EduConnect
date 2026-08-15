@@ -4,18 +4,30 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 class ApiClient {
   // Base URL untuk Chrome Web emulator yang menembak backend lokal
-  static const String baseUrl = 'http://localhost:5000/api';
+  static const String baseUrl = 'http://34.128.96.164:5000/api';
 
-  // Menyimpan token ke penyimpanan lokal (Shared Preferences)
-  static Future<void> saveToken(String token) async {
+  // Menyimpan token dan data user ke penyimpanan lokal (Shared Preferences)
+  static Future<void> saveUserData(String token, String userId, String role) async {
     final prefs = await SharedPreferences.getInstance();
     await prefs.setString('jwt_token', token);
+    await prefs.setString('user_id', userId);
+    await prefs.setString('user_role', role);
   }
 
   // Mengambil token untuk otorisasi
   static Future<String?> getToken() async {
     final prefs = await SharedPreferences.getInstance();
     return prefs.getString('jwt_token');
+  }
+
+  static Future<String?> getUserId() async {
+    final prefs = await SharedPreferences.getInstance();
+    return prefs.getString('user_id');
+  }
+
+  static Future<String?> getUserRole() async {
+    final prefs = await SharedPreferences.getInstance();
+    return prefs.getString('user_role');
   }
 
   // Fungsi Register (Sign Up)
@@ -37,7 +49,18 @@ class ApiClient {
         }),
       );
 
-      return jsonDecode(response.body);
+      final data = jsonDecode(response.body);
+      
+      // Walau register, jika backend mengembalikan id/role, bisa kita simpan. 
+      // Tapi backend tidak mengembalikan token di register saat ini.
+      // Kita asumsikan token didapat saat login.
+      if (response.statusCode == 201 && data['user'] != null) {
+        final prefs = await SharedPreferences.getInstance();
+        await prefs.setString('user_id', data['user']['id'].toString());
+        await prefs.setString('user_role', data['user']['role'].toString());
+      }
+
+      return data;
     } catch (e) {
       return {'message': 'Gagal terhubung ke server: $e'};
     }
@@ -62,7 +85,11 @@ class ApiClient {
       
       // Jika login berhasil dan dapat token, simpan tokennya
       if (response.statusCode == 200 && data['token'] != null) {
-        await saveToken(data['token']);
+        await saveUserData(
+          data['token'],
+          data['user']['id'].toString(),
+          data['user']['role'].toString()
+        );
       }
       
       return data;

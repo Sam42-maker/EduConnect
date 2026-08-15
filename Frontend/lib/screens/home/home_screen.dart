@@ -1,15 +1,64 @@
 import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
+import 'dart:convert';
 import '../community/community_screen.dart';
+import '../../services/api_client.dart';
 
-class HomeScreen extends StatelessWidget {
+class HomeScreen extends StatefulWidget {
   final String userName;
 
-  const HomeScreen({Key? key, this.userName = 'Anindya Putri'})
-    : super(key: key);
+  const HomeScreen({Key? key, this.userName = 'Mahasiswa'}) : super(key: key);
 
+  @override
+  State<HomeScreen> createState() => _HomeScreenState();
+}
+
+class _HomeScreenState extends State<HomeScreen> {
   final Color brandColor = const Color(0xFF2B5C43);
   final Color bgColor = const Color(0xFFF9F9F9);
   final Color brandSecondary = const Color(0xFFD7E8D5);
+
+  Map<String, dynamic> _profileData = {};
+  bool _isLoading = true;
+  String _displayName = '';
+
+  @override
+  void initState() {
+    super.initState();
+    _displayName = widget.userName;
+    _fetchUserData();
+  }
+
+  Future<void> _fetchUserData() async {
+    try {
+      final userId = await ApiClient.getUserId();
+      if (userId == null) {
+        setState(() => _isLoading = false);
+        return;
+      }
+
+      final res = await http.get(Uri.parse('http://34.128.96.164:5000/api/profile/$userId'));
+      if (res.statusCode == 200) {
+        final data = json.decode(res.body);
+        if (data['success']) {
+          setState(() {
+            _profileData = data['data'];
+            if (_profileData['full_name'] != null && _profileData['full_name'].toString().isNotEmpty) {
+              _displayName = _profileData['full_name'];
+            }
+            _isLoading = false;
+          });
+        } else {
+          setState(() => _isLoading = false);
+        }
+      } else {
+        setState(() => _isLoading = false);
+      }
+    } catch (e) {
+      debugPrint('Error fetching home data: $e');
+      setState(() => _isLoading = false);
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -58,9 +107,6 @@ class HomeScreen extends StatelessWidget {
             _buildCommunitiesList(context),
             const SizedBox(height: 12),
 
-            _buildMentorCard(),
-            const SizedBox(height: 40),
-
             _buildAboutFooter(),
             const SizedBox(height: 40),
           ],
@@ -70,6 +116,13 @@ class HomeScreen extends StatelessWidget {
   }
 
   Widget _buildTopHeader() {
+    final major = _profileData['major'] ?? 'Belum ada jurusan';
+    final semester = _profileData['current_semester'] ?? '-';
+    final studyInfo = '$major · $semester';
+
+    // Kalkulasi profil (mock, bisa dibikin dinamis nanti)
+    final profileScore = _profileData['full_name'] != null ? 85 : 40;
+
     return Container(
       padding: const EdgeInsets.fromLTRB(20, 50, 20, 24),
       decoration: BoxDecoration(
@@ -87,17 +140,11 @@ class HomeScreen extends StatelessWidget {
             children: [
               Row(
                 children: [
-                  Container(
-                    padding: const EdgeInsets.all(6),
-                    decoration: BoxDecoration(
-                      color: Colors.black.withOpacity(0.2),
-                      borderRadius: BorderRadius.circular(8),
-                    ),
-                    child: const Icon(
-                      Icons.school,
-                      color: Colors.white,
-                      size: 20,
-                    ),
+                  Image.asset(
+                    'assets/images/Connie_app.png',
+                    width: 32,
+                    height: 32,
+                    fit: BoxFit.contain,
                   ),
                   const SizedBox(width: 8),
                   const Text(
@@ -133,7 +180,7 @@ class HomeScreen extends StatelessWidget {
                   ),
                   const SizedBox(height: 4),
                   Text(
-                    userName,
+                    _displayName,
                     style: const TextStyle(
                       color: Colors.white,
                       fontSize: 24,
@@ -142,7 +189,7 @@ class HomeScreen extends StatelessWidget {
                   ),
                   const SizedBox(height: 4),
                   Text(
-                    'Teknik Informatika · Semester 7',
+                    studyInfo,
                     style: TextStyle(
                       color: Colors.white.withOpacity(0.6),
                       fontSize: 12,
@@ -154,7 +201,7 @@ class HomeScreen extends StatelessWidget {
                 radius: 28,
                 backgroundColor: brandSecondary,
                 child: Text(
-                  userName.isNotEmpty ? userName.trim()[0].toUpperCase() : 'A',
+                  _displayName.isNotEmpty ? _displayName.trim()[0].toUpperCase() : 'A',
                   style: TextStyle(
                     color: brandColor,
                     fontSize: 24,
@@ -179,12 +226,12 @@ class HomeScreen extends StatelessWidget {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    const Text(
-                      'Profil kamu 68% lengkap',
-                      style: TextStyle(color: Colors.white, fontSize: 14),
+                    Text(
+                      'Profil kamu $profileScore% lengkap',
+                      style: const TextStyle(color: Colors.white, fontSize: 14),
                     ),
                     Text(
-                      '68%',
+                      '$profileScore%',
                       style: TextStyle(
                         color: brandSecondary,
                         fontSize: 14,
@@ -195,7 +242,7 @@ class HomeScreen extends StatelessWidget {
                 ),
                 const SizedBox(height: 12),
                 LinearProgressIndicator(
-                  value: 0.68,
+                  value: profileScore / 100,
                   backgroundColor: Colors.white.withOpacity(0.2),
                   valueColor: AlwaysStoppedAnimation<Color>(brandSecondary),
                   minHeight: 6,

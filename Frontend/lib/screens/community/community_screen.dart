@@ -51,7 +51,7 @@ class _CommunityScreenState extends State<CommunityScreen> {
 
   Future<void> _fetchCommunities() async {
     try {
-      final response = await http.get(Uri.parse('http://localhost:5000/api/communities'));
+      final response = await http.get(Uri.parse('http://34.128.96.164:5000/api/communities'));
       if (response.statusCode == 200) {
         final data = json.decode(response.body);
         if (data['success']) {
@@ -376,7 +376,7 @@ class _CommunityScreenState extends State<CommunityScreen> {
 
                       try {
                         final res = await http.post(
-                          Uri.parse('http://localhost:5000/api/communities'),
+                          Uri.parse('http://34.128.96.164:5000/api/communities'),
                           headers: {"Content-Type": "application/json"},
                           body: json.encode(body),
                         );
@@ -418,7 +418,18 @@ class _CommunityScreenState extends State<CommunityScreen> {
     return Scaffold(
       backgroundColor: const Color(0xFFF9FAFB),
       appBar: AppBar(
-        title: Text(widget.title, style: const TextStyle(fontWeight: FontWeight.bold, color: Colors.white)),
+        title: Row(
+          children: [
+            Image.asset(
+              'assets/images/Connie_app.png',
+              width: 32,
+              height: 32,
+              fit: BoxFit.contain,
+            ),
+            const SizedBox(width: 12),
+            Text(widget.title, style: const TextStyle(fontWeight: FontWeight.bold, color: Colors.white)),
+          ],
+        ),
         backgroundColor: brandColor,
         automaticallyImplyLeading: false,
         iconTheme: const IconThemeData(color: Colors.white),
