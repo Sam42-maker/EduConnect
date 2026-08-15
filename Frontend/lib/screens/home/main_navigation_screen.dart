@@ -8,15 +8,26 @@ import '../profile/profile_screen.dart';
 
 class MainNavigationScreen extends StatefulWidget {
   final String userName;
+  final int initialIndex;
 
-  const MainNavigationScreen({super.key, this.userName = 'Anindya Putri'});
+  const MainNavigationScreen({
+    super.key, 
+    this.userName = 'Anindya Putri',
+    this.initialIndex = 0,
+  });
 
   @override
   State<MainNavigationScreen> createState() => _MainNavigationScreenState();
 }
 
 class _MainNavigationScreenState extends State<MainNavigationScreen> {
-  int _selectedIndex = 0;
+  late int _selectedIndex;
+
+  @override
+  void initState() {
+    super.initState();
+    _selectedIndex = widget.initialIndex;
+  }
 
   static const Color brandColor = Color(0xFF2B5C43);
 
