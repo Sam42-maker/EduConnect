@@ -42,7 +42,7 @@ services:
       test: ["CMD", "mysqladmin" ,"ping", "-h", "localhost", "-u", "root", "-prootpassword"]
       interval: 10s
       timeout: 5s
-      retries: 5
+      retries: 30
     networks:
       - educonnect_network
 
