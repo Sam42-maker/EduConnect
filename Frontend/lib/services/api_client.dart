@@ -4,7 +4,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 class ApiClient {
   // Base URL untuk Chrome Web emulator yang menembak backend lokal
-  static const String baseUrl = 'http://34.128.96.164:5000/api';
+  static const String baseUrl = 'http://10.0.2.2:5000/api';
 
   // Menyimpan token dan data user ke penyimpanan lokal (Shared Preferences)
   static Future<void> saveUserData(String token, String userId, String role) async {
