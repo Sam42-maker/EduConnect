@@ -1,3 +1,4 @@
+import 'package:frontend/services/api_client.dart';
 import 'package:flutter/material.dart';
 import 'community_detail_screen.dart';
 import 'package:http/http.dart' as http;
@@ -51,7 +52,7 @@ class _CommunityScreenState extends State<CommunityScreen> {
 
   Future<void> _fetchCommunities() async {
     try {
-      final response = await http.get(Uri.parse('http://34.128.96.164:5000/api/communities'));
+      final response = await http.get(Uri.parse(ApiClient.baseUrl + '/communities'));
       if (response.statusCode == 200) {
         final data = json.decode(response.body);
         if (data['success']) {
@@ -376,7 +377,7 @@ class _CommunityScreenState extends State<CommunityScreen> {
 
                       try {
                         final res = await http.post(
-                          Uri.parse('http://34.128.96.164:5000/api/communities'),
+                          Uri.parse(ApiClient.baseUrl + '/communities'),
                           headers: {"Content-Type": "application/json"},
                           body: json.encode(body),
                         );

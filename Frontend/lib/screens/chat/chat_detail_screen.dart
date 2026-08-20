@@ -1,3 +1,4 @@
+import 'package:frontend/services/api_client.dart';
 import 'package:flutter/material.dart';
 import 'package:socket_io_client/socket_io_client.dart' as IO;
 import 'package:http/http.dart' as http;
@@ -36,7 +37,7 @@ class _ChatDetailScreenState extends State<ChatDetailScreen> {
 
   Future<void> _fetchMessages() async {
     try {
-      final res = await http.get(Uri.parse('http://34.128.96.164:5000/api/chats/${widget.partnerId}?userId=$currentUserId'));
+      final res = await http.get(Uri.parse(ApiClient.baseUrl + '/chats/${widget.partnerId}?userId=$currentUserId'));
       if (res.statusCode == 200) {
         final data = json.decode(res.body);
         if (data['success']) {
@@ -54,7 +55,7 @@ class _ChatDetailScreenState extends State<ChatDetailScreen> {
   }
 
   void _initSocket() {
-    socket = IO.io('http://34.128.96.164:5000', <String, dynamic>{
+    socket = IO.io(ApiClient.baseUrl.replaceAll('/api', ''), <String, dynamic>{
       'transports': ['websocket'],
       'autoConnect': false,
     });

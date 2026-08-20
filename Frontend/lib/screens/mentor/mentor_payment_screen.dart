@@ -1,3 +1,4 @@
+import 'package:frontend/services/api_client.dart';
 import 'package:flutter/material.dart';
 import 'dart:async';
 import 'dart:convert';
@@ -68,7 +69,7 @@ class _MentorPaymentScreenState extends State<MentorPaymentScreen> {
       };
 
       await http.post(
-        Uri.parse('http://34.128.96.164:5000/api/mentors/book'),
+        Uri.parse(ApiClient.baseUrl + '/mentors/book'),
         headers: {'Content-Type': 'application/json'},
         body: json.encode(body),
       );

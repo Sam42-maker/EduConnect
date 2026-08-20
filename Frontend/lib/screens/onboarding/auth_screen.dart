@@ -1,3 +1,4 @@
+import 'package:frontend/services/api_client.dart';
 import 'package:flutter/material.dart';
 
 import '../../widgets/custom_button.dart';

@@ -1,3 +1,4 @@
+import 'package:frontend/services/api_client.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
@@ -41,7 +42,7 @@ class _MentorScreenState extends State<MentorScreen> {
   }
 
   void _initSocket() {
-    socket = IO.io('http://34.128.96.164:5000', <String, dynamic>{
+    socket = IO.io(ApiClient.baseUrl.replaceAll('/api', ''), <String, dynamic>{
       'transports': ['websocket'],
       'autoConnect': true,
     });
@@ -76,7 +77,7 @@ class _MentorScreenState extends State<MentorScreen> {
 
   Future<void> _fetchMentors() async {
     try {
-      final response = await http.get(Uri.parse('http://34.128.96.164:5000/api/mentors'));
+      final response = await http.get(Uri.parse(ApiClient.baseUrl + '/mentors'));
       if (response.statusCode == 200) {
         final List<dynamic> data = json.decode(response.body);
         setState(() {
@@ -99,7 +100,7 @@ class _MentorScreenState extends State<MentorScreen> {
     
     // One click promotion
     final res = await http.post(
-      Uri.parse('http://34.128.96.164:5000/api/mentors/promote'),
+      Uri.parse(ApiClient.baseUrl + '/mentors/promote'),
       headers: {'Content-Type': 'application/json'},
       body: jsonEncode({
         'userId': userId,

@@ -1,3 +1,4 @@
+import 'package:frontend/services/api_client.dart';
 import 'package:socket_io_client/socket_io_client.dart' as IO;
 import 'api_client.dart';
 

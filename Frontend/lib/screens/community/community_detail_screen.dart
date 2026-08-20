@@ -1,3 +1,4 @@
+import 'package:frontend/services/api_client.dart';
 import 'package:flutter/material.dart';
 import 'package:socket_io_client/socket_io_client.dart' as IO;
 import 'package:intl/intl.dart';
@@ -44,7 +45,7 @@ class _CommunityDetailScreenState extends State<CommunityDetailScreen> {
 
   Future<void> _fetchChannels() async {
     try {
-      final res = await http.get(Uri.parse('http://34.128.96.164:5000/api/communities/${widget.communityId}/channels'));
+      final res = await http.get(Uri.parse(ApiClient.baseUrl + '/communities/${widget.communityId}/channels'));
       if (res.statusCode == 200) {
         final data = json.decode(res.body);
         if (data['success']) {
@@ -70,7 +71,7 @@ class _CommunityDetailScreenState extends State<CommunityDetailScreen> {
 
   Future<void> _fetchMessages(String channelId) async {
     try {
-      final res = await http.get(Uri.parse('http://34.128.96.164:5000/api/communities/channels/$channelId/messages'));
+      final res = await http.get(Uri.parse(ApiClient.baseUrl + '/communities/channels/$channelId/messages'));
       if (res.statusCode == 200) {
         final data = json.decode(res.body);
         setState(() {
@@ -97,7 +98,7 @@ class _CommunityDetailScreenState extends State<CommunityDetailScreen> {
   void _initSocket() {
     try {
       // Connect to Socket.IO server
-      socket = IO.io('http://34.128.96.164:5000', <String, dynamic>{
+      socket = IO.io(ApiClient.baseUrl.replaceAll('/api', ''), <String, dynamic>{
         'transports': ['websocket'],
         'autoConnect': false,
       });

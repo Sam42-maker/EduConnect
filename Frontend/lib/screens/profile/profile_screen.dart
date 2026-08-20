@@ -1,3 +1,4 @@
+import 'package:frontend/services/api_client.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
@@ -29,7 +30,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
         setState(() => _isLoading = false);
         return;
       }
-      final res = await http.get(Uri.parse('http://34.128.96.164:5000/api/profile/$currentUserId'));
+      final res = await http.get(Uri.parse(ApiClient.baseUrl + '/profile/$currentUserId'));
       if (res.statusCode == 200) {
         final data = json.decode(res.body);
         if (data['success']) {
@@ -233,7 +234,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           
                           try {
                             final res = await http.put(
-                              Uri.parse('http://34.128.96.164:5000/api/profile/$currentUserId'),
+                              Uri.parse(ApiClient.baseUrl + '/profile/$currentUserId'),
                               headers: {"Content-Type": "application/json"},
                               body: json.encode(body),
                             );

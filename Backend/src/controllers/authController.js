@@ -28,8 +28,12 @@ exports.register = async (req, res) => {
       );
     }
 
+    const payload = { user: { id: result.insertId, role: role || 'Student' } };
+    const token = jwt.sign(payload, process.env.JWT_SECRET || 'secret_key', { expiresIn: '7d' });
+
     res.status(201).json({ 
       message: 'Registrasi berhasil.',
+      token,
       user: { id: result.insertId, email, role, name: fullName }
     });
   } catch (error) {

@@ -1,10 +1,22 @@
+import 'package:frontend/services/api_client.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 
+import 'dart:io' show Platform;
+import 'package:flutter/foundation.dart' show kIsWeb;
+
 class ApiClient {
-  // Base URL untuk Chrome Web emulator yang menembak backend lokal
-  static const String baseUrl = 'http://localhost:5000/api';
+  // Base URL yang dinamis. Jika dijalankan di Web pakai localhost, jika di Emulator Android pakai 10.0.2.2
+  static String get baseUrl {
+    if (kIsWeb) {
+      return 'http://localhost:5000/api';
+    } else if (Platform.isAndroid) {
+      return 'http://10.0.2.2:5000/api';
+    } else {
+      return 'http://localhost:5000/api';
+    }
+  }
 
   // Menyimpan token dan data user ke penyimpanan lokal (Shared Preferences)
   static Future<void> saveUserData(String token, String userId, String role) async {
@@ -55,9 +67,17 @@ class ApiClient {
       // Tapi backend tidak mengembalikan token di register saat ini.
       // Kita asumsikan token didapat saat login.
       if (response.statusCode == 201 && data['user'] != null) {
-        final prefs = await SharedPreferences.getInstance();
-        await prefs.setString('user_id', data['user']['id'].toString());
-        await prefs.setString('user_role', data['user']['role'].toString());
+        if (data['token'] != null) {
+          await saveUserData(
+            data['token'],
+            data['user']['id'].toString(),
+            data['user']['role'].toString()
+          );
+        } else {
+          final prefs = await SharedPreferences.getInstance();
+          await prefs.setString('user_id', data['user']['id'].toString());
+          await prefs.setString('user_role', data['user']['role'].toString());
+        }
       }
 
       return data;
